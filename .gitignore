@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv/
+
+# PyTorch
+*.pt
+*.pth
+
+# Results (checkpoints can be large)
+results/runs/*/checkpoint_*.pt
+results/runs/*/final_model.pt
+
+# Keep directory structure
+!results/runs/.gitkeep
+!results/tta/.gitkeep
+!results/interventions/.gitkeep
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+nohup.out
+experiment_log.txt
+
+# TensorBoard
+events.out.tfevents.*
+
