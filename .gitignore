@@ -41,3 +41,4 @@ experiment_log.txt
 # TensorBoard
 events.out.tfevents.*
 
+cursorrules.txt
