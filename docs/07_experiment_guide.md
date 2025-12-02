@@ -32,23 +32,23 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # Verify dependencies
-python -c "import torch; import gymnasium; print('PyTorch:', torch.__version__); print('Ready!')"
+python -c "import torch; import gymnasium; print('PyTorch:', torch.__version__); print('Ready')"
 ```
 
 ### 1.2 Test Components
 
 ```bash
 # Test environment wrapper
-python src/envs/nonstationary_cartpole.py
+python -m src.envs.nonstationary_cartpole
 
 # Test abstraction bank (with all improvements)
-python src/models/abstraction_bank.py
+python -m src.models.abstraction_bank
 
 # Test losses
-python src/losses.py
+python -m src.losses
 
 # Test full agent
-python src/models/astral_agent.py
+python -m src.models.astral_agent
 ```
 
 ---
@@ -581,7 +581,8 @@ This executes in order:
 
 ```bash
 # Run all experiments in background, log to file
-nohup ./scripts/run_all.sh > experiment_log.txt 2>&1 &
+# Use --yes flag to skip interactive prompt
+nohup ./scripts/run_all.sh --yes > experiment_log.txt 2>&1 &
 
 # Check progress anytime
 tail -f experiment_log.txt
