@@ -2,8 +2,6 @@
 # run_interpretability_experiments.sh
 # Runs all interpretability improvement experiments
 
-set -e  # Exit on error
-
 cd "$(dirname "$0")/.."
 
 # Activate venv (adjust path if needed)
@@ -24,32 +22,45 @@ echo "Timesteps: $TIMESTEPS"
 echo "Seed: $SEED"
 echo ""
 
+# Track failures
+FAILURES=()
+SUCCESSES=0
+
+# Helper function to run experiment
+run_experiment() {
+    local name=$1
+    shift
+    echo "$name"
+    if python src/train.py "$@"; then
+        ((SUCCESSES++))
+    else
+        FAILURES+=("$name")
+        echo "  [FAILED] $name"
+    fi
+}
+
 # 1. Individual improvements
 echo "=== Individual Improvements ==="
 
-echo "[1/7] Gumbel-Softmax only..."
-python src/train.py \
+run_experiment "[1/7] Gumbel-Softmax only" \
     --exp_name interp_gumbel \
     --use_gumbel True \
     --total_timesteps $TIMESTEPS \
     --seed $SEED
 
-echo "[2/7] Hard routing only..."
-python src/train.py \
+run_experiment "[2/7] Hard routing only" \
     --exp_name interp_hard \
     --hard_routing True \
     --total_timesteps $TIMESTEPS \
     --seed $SEED
 
-echo "[3/7] Orthogonal init only..."
-python src/train.py \
+run_experiment "[3/7] Orthogonal init only" \
     --exp_name interp_orth \
     --orthogonal_init True \
     --total_timesteps $TIMESTEPS \
     --seed $SEED
 
-echo "[4/7] Temperature annealing only..."
-python src/train.py \
+run_experiment "[4/7] Temperature annealing only" \
     --exp_name interp_temp_anneal \
     --temp_anneal True \
     --tau_start 5.0 \
@@ -57,15 +68,13 @@ python src/train.py \
     --total_timesteps $TIMESTEPS \
     --seed $SEED
 
-echo "[5/7] Contrastive loss only (λ=0.05)..."
-python src/train.py \
+run_experiment "[5/7] Contrastive loss only (λ=0.05)" \
     --exp_name interp_contrast \
     --lambda_contrast 0.05 \
     --total_timesteps $TIMESTEPS \
     --seed $SEED
 
-echo "[6/7] Slot prediction only..."
-python src/train.py \
+run_experiment "[6/7] Slot prediction only" \
     --exp_name interp_slot_pred \
     --slot_prediction True \
     --lambda_slot_pred 0.01 \
@@ -76,8 +85,7 @@ python src/train.py \
 echo ""
 echo "=== All Improvements Combined ==="
 
-echo "[7/7] All improvements..."
-python src/train.py \
+run_experiment "[7/7] All improvements" \
     --exp_name interp_all \
     --use_gumbel True \
     --hard_routing True \
@@ -93,6 +101,20 @@ python src/train.py \
 echo ""
 echo "=============================================="
 echo "Interpretability Experiments Complete!"
-echo "View results: tensorboard --logdir results/runs"
 echo "=============================================="
+echo "  Successful: $SUCCESSES"
+echo "  Failed: ${#FAILURES[@]}"
 
+if [ ${#FAILURES[@]} -gt 0 ]; then
+    echo ""
+    echo "FAILED RUNS:"
+    for fail in "${FAILURES[@]}"; do
+        echo "  - $fail"
+    done
+fi
+
+echo ""
+echo "View results: tensorboard --logdir results/runs"
+
+# Exit with error if any failures
+[ ${#FAILURES[@]} -eq 0 ]

@@ -2,8 +2,6 @@
 # run_tta_tests.sh
 # Runs test-time adaptation experiments on all trained ASTRAL models
 
-set -e  # Exit on error
-
 cd "$(dirname "$0")/.."
 
 # Activate venv (adjust path if needed)
@@ -25,23 +23,27 @@ echo "Evaluation episodes: $NUM_EVAL"
 echo ""
 
 # Find all ASTRAL runs with final_model.pt
-RUNS=$(find results/runs -name "final_model.pt" -path "*astral*" 2>/dev/null || true)
+mapfile -t MODELS < <(find results/runs -name "final_model.pt" -path "*astral*" 2>/dev/null)
 
-if [ -z "$RUNS" ]; then
+if [ ${#MODELS[@]} -eq 0 ]; then
     echo "No trained ASTRAL models found!"
     echo "Run training first: ./scripts/run_core_experiments.sh"
     exit 1
 fi
 
-echo "Found models:"
-echo "$RUNS" | while read -r model; do
+echo "Found ${#MODELS[@]} models:"
+for model in "${MODELS[@]}"; do
     dirname "$model"
 done
 echo ""
 
+# Track failures
+FAILURES=()
+SUCCESSES=0
+
 # Run TTA on each model
 echo "=== Running TTA Tests ==="
-echo "$RUNS" | while read -r model; do
+for model in "${MODELS[@]}"; do
     run_dir=$(dirname "$model")
     run_name=$(basename "$run_dir")
     
@@ -49,15 +51,34 @@ echo "$RUNS" | while read -r model; do
     echo "Testing: $run_name"
     echo "---"
     
-    python src/test_time_adapt.py \
+    if python src/test_time_adapt.py \
         --checkpoint "$model" \
         --num_adapt_episodes $NUM_ADAPT \
-        --num_eval_episodes $NUM_EVAL || echo "  [FAILED] $run_name"
+        --num_eval_episodes $NUM_EVAL; then
+        ((SUCCESSES++))
+    else
+        FAILURES+=("$run_name")
+        echo "  [FAILED] $run_name"
+    fi
 done
 
 echo ""
 echo "=============================================="
 echo "TTA Tests Complete!"
-echo "Results saved to: results/tta/"
 echo "=============================================="
+echo "  Successful: $SUCCESSES"
+echo "  Failed: ${#FAILURES[@]}"
 
+if [ ${#FAILURES[@]} -gt 0 ]; then
+    echo ""
+    echo "FAILED MODELS:"
+    for fail in "${FAILURES[@]}"; do
+        echo "  - $fail"
+    done
+fi
+
+echo ""
+echo "Results saved to: results/tta/"
+
+# Exit with error if any failures
+[ ${#FAILURES[@]} -eq 0 ]
