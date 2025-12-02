@@ -19,6 +19,7 @@ Usage:
 
 import os
 import sys
+import json
 import argparse
 from typing import Dict, List, Optional
 
@@ -517,6 +518,31 @@ def main():
         most_important = np.argmax(drops)
         drop_amount = drops[most_important]
         print(f"  Mode {mode}: Slot {most_important} (drop: {drop_amount:.2f})")
+    
+    # Save raw data for regenerating plots
+    data_to_save = {
+        'modes': args.modes,
+        'natural_weights': {
+            str(mode): {
+                'mean': mode_weights[mode]['mean'].tolist(),
+                'std': mode_weights[mode]['std'].tolist(),
+            }
+            for mode in args.modes
+        },
+        'clamp_experiment': {
+            'results_matrix': clamp_results.tolist(),
+            'baseline_returns': clamp_baseline,
+        },
+        'disable_experiment': {
+            'results_matrix': disable_results.tolist(),
+            'baseline_returns': disable_baseline,
+        },
+    }
+    
+    data_path = os.path.join(args.save_dir, 'intervention_results.json')
+    with open(data_path, 'w') as f:
+        json.dump(data_to_save, f, indent=2)
+    print(f"\nData saved to: {data_path}")
 
 
 if __name__ == "__main__":

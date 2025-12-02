@@ -19,6 +19,7 @@ import argparse
 from collections import defaultdict
 from typing import Optional, List, Dict
 
+import json
 import numpy as np
 import torch
 import torch.optim as optim
@@ -397,6 +398,23 @@ def plot_tta_results(results: Dict, save_dir: str):
     plt.close()
     
     print(f"\nPlot saved to: {os.path.join(save_dir, 'tta_results.png')}")
+    
+    # Save raw data for regenerating plots
+    data_to_save = {}
+    for mode in modes:
+        data_to_save[str(mode)] = {
+            'before_mean': results[mode]['before_mean'],
+            'after_mean': results[mode]['after_mean'],
+            'improvement': results[mode]['improvement'],
+            'before_returns': results[mode]['before']['returns'],
+            'after_returns': results[mode]['after']['returns'],
+            'adapt_returns': results[mode]['adapt']['returns'],
+        }
+    
+    data_path = os.path.join(save_dir, 'tta_results.json')
+    with open(data_path, 'w') as f:
+        json.dump(data_to_save, f, indent=2)
+    print(f"Data saved to: {data_path}")
 
 
 def main():
