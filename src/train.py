@@ -83,6 +83,7 @@ class Config:
     use_gumbel: bool = False          # Gumbel-Softmax for exploration
     hard_routing: bool = False        # Hard one-hot routing
     orthogonal_init: bool = False     # Orthogonal abstraction initialization
+    slot_dropout: float = 0.0         # Slot dropout probability (0 = disabled)
     temp_anneal: bool = False         # Temperature annealing
     tau_start: float = 5.0            # Starting temperature (if temp_anneal)
     tau_end: float = 0.5              # Ending temperature (if temp_anneal)
@@ -152,6 +153,8 @@ Example:
                         help="Use hard one-hot routing")
     parser.add_argument("--orthogonal_init", type=lambda x: x.lower() == 'true', default=False,
                         help="Initialize abstractions orthogonally")
+    parser.add_argument("--slot_dropout", type=float, default=0.0,
+                        help="Slot dropout probability during training (0 = disabled)")
     parser.add_argument("--temp_anneal", type=lambda x: x.lower() == 'true', default=False,
                         help="Enable temperature annealing")
     parser.add_argument("--tau_start", type=float, default=5.0,
@@ -245,6 +248,8 @@ def train(config: Config):
             improvements.append("Hard-Routing")
         if config.orthogonal_init:
             improvements.append("Orthogonal-Init")
+        if config.slot_dropout > 0:
+            improvements.append(f"Slot-Dropout({config.slot_dropout})")
         if config.temp_anneal:
             improvements.append(f"Temp-Anneal({config.tau_start}→{config.tau_end})")
         if config.lambda_contrast > 0:
@@ -261,6 +266,7 @@ def train(config: Config):
             use_gumbel=config.use_gumbel,
             hard_routing=config.hard_routing,
             orthogonal_init=config.orthogonal_init,
+            slot_dropout=config.slot_dropout,
         ).to(device)
         
         print(f"Training ASTRAL agent ({count_parameters(agent):,} parameters)")

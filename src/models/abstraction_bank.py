@@ -49,6 +49,7 @@ class AbstractionBank(nn.Module):
         use_gumbel: bool = False,
         hard_routing: bool = False,
         orthogonal_init: bool = False,
+        slot_dropout: float = 0.0,
     ):
         """
         Initialize AbstractionBank.
@@ -61,6 +62,7 @@ class AbstractionBank(nn.Module):
             use_gumbel: If True, use Gumbel-Softmax (helps exploration)
             hard_routing: If True, use hard one-hot routing (with straight-through gradient)
             orthogonal_init: If True, initialize abstractions orthogonally
+            slot_dropout: Probability of dropping each slot during training (0.0 = no dropout)
         """
         super().__init__()
         self.d_model = d_model
@@ -68,6 +70,7 @@ class AbstractionBank(nn.Module):
         self.tau = tau
         self.use_gumbel = use_gumbel
         self.hard_routing = hard_routing
+        self.slot_dropout = slot_dropout
         
         if gating_hidden_dim is None:
             gating_hidden_dim = d_model
@@ -121,6 +124,16 @@ class AbstractionBank(nn.Module):
         """
         # Compute gating logits
         logits = self.gating(h)  # [batch, K]
+        
+        # Apply slot dropout during training (mask out random slots)
+        if self.training and self.slot_dropout > 0:
+            # Create dropout mask: 1 = keep, 0 = drop
+            dropout_mask = (torch.rand(self.num_abstractions, device=logits.device) > self.slot_dropout).float()
+            # Ensure at least one slot is active
+            if dropout_mask.sum() == 0:
+                dropout_mask[torch.randint(self.num_abstractions, (1,))] = 1.0
+            # Apply mask to logits (set dropped slots to -inf so softmax gives 0)
+            logits = logits + (1 - dropout_mask) * (-1e9)
         
         # Compute weights based on mode
         if self.use_gumbel and self.training:

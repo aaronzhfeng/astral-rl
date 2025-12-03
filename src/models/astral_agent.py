@@ -53,6 +53,7 @@ class ASTRALAgent(nn.Module):
         use_gumbel: bool = False,
         hard_routing: bool = False,
         orthogonal_init: bool = False,
+        slot_dropout: float = 0.0,
     ):
         """
         Initialize ASTRAL agent.
@@ -66,6 +67,7 @@ class ASTRALAgent(nn.Module):
             use_gumbel: Use Gumbel-Softmax for differentiable discrete selection
             hard_routing: Use hard (one-hot) routing
             orthogonal_init: Initialize abstractions orthogonally
+            slot_dropout: Probability of dropping each slot during training
         """
         super().__init__()
         self.obs_dim = obs_dim
@@ -93,6 +95,7 @@ class ASTRALAgent(nn.Module):
             use_gumbel=use_gumbel,
             hard_routing=hard_routing,
             orthogonal_init=orthogonal_init,
+            slot_dropout=slot_dropout,
         )
         
         # FiLM modulation (forces dependency on abstraction)
