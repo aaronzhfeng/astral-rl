@@ -8,14 +8,14 @@ This document tracks all proposed experiments and their completion status.
 
 ## Quick Summary
 
-| Category | Proposed | Completed | Pending |
-|----------|----------|-----------|---------|
-| Core Validation | 6 | 6 | 0 |
-| Interpretability | 7 | 7 | 0 |
-| Slot Collapse (Strong Reg) | 11 | 11 | 0 |
-| Slot Collapse (Code Changes) | 18 | 0 | 18 |
-| TTA Validation | 5 | 0 | 5 |
-| **Total** | **47** | **24** | **23** |
+| Category | Proposed | Completed | Ready to Run | Pending |
+|----------|----------|-----------|--------------|---------|
+| Core Validation | 6 | 6 | 0 | 0 |
+| Interpretability | 7 | 7 | 0 | 0 |
+| Slot Collapse (Strong Reg) | 11 | 11 | 0 | 0 |
+| Slot Collapse (Code Changes) | 18 | 0 | 0 | 18 |
+| TTA Validation | 5 | 0 | 1 | 4 |
+| **Total** | **47** | **24** | **1** | **22** |
 
 ---
 
@@ -144,17 +144,20 @@ This document tracks all proposed experiments and their completion status.
 
 ---
 
-## 6. TTA Validation Experiments (Require Code Changes)
+## 6. TTA Validation Experiments
 
 **Source:** `09_experiments_tta_validation.md`
 
-| Experiment | Priority | Status | Requires |
-|------------|----------|--------|----------|
-| **1. Baseline Control Comparison** | 🔴 Critical | ❌ Not Run | `--adapt_mode` flag |
-| 2. Weight Trajectory Analysis | 🟡 Medium | ❌ Not Run | `--track_trajectory` |
-| 3. Mode Identification | 🟡 Medium | ❌ Not Run | Analysis script |
-| 4. Adaptation Speed Comparison | 🟢 Low | ❌ Not Run | Multiple runs |
-| 5. Cross-Seed Consistency | 🟢 Low | ❌ Not Run | Already possible |
+| Experiment | Priority | Status | Result |
+|------------|----------|--------|--------|
+| **1. Baseline Control Comparison** | 🔴 Critical | ✅ Run | ⚠️ Inconclusive (baseline broken) |
+| 1b. Suboptimal ASTRAL | 🔴 Critical | ✅ Run | ❌ TTA hurt performance |
+| 2. Weight Trajectory Analysis | 🟡 Medium | ❌ Not Run | — |
+| 3. Mode Identification | 🟡 Medium | ❌ Not Run | — |
+| 4. Adaptation Speed Comparison | 🟢 Low | ❌ Not Run | — |
+| 5. Cross-Seed Consistency | 🟢 Low | ❌ Not Run | — |
+
+**Key Finding:** TTA doesn't improve performance on any tested model. Root cause likely slot collapse.
 
 ---
 

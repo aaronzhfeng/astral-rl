@@ -2,7 +2,7 @@
 
 **Purpose:** Prove that TTA improvement is due to abstraction reweighting, not just generic fine-tuning.
 
-**Status:** Proposed (not yet implemented)
+**Status:** Experiment 1 implemented, ready to run
 
 ---
 
@@ -22,15 +22,24 @@ From our experiments, we observed:
 
 ## Experiment 1: Baseline Control Comparison (Critical)
 
+**Status: ✅ IMPLEMENTED**
+
 ### Hypothesis
 If fine-tuning a baseline model (no abstraction bank) achieves similar improvement to ASTRAL TTA, then the abstraction mechanism isn't providing value.
 
-### Required Code Changes
+### Implementation (DONE)
 
-Add `--adapt_mode` flag to `test_time_adapt.py`:
-- `gating` (default): Only adapt gating network
-- `policy_head`: Adapt policy head (for baseline comparison)
-- `all_params`: Adapt all parameters
+Added to `test_time_adapt.py`:
+- `--adapt_mode` flag: `gating` (default), `policy_head`, `all_params`
+- `--agent_type` flag: `auto` (default), `astral`, `baseline`
+- `load_agent()`: Auto-detects agent type from checkpoint path
+- `test_time_adapt_policy_head()`: Adapts only policy head
+- `test_time_adapt_all_params()`: Full fine-tuning
+
+**Run with:**
+```bash
+./scripts/run_tta_comparison.sh
+```
 
 ### Experiments
 
