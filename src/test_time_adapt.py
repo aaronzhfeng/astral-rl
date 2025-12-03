@@ -9,19 +9,26 @@ then adapt only the gating network on a fixed environment mode.
 This tests whether ASTRAL can quickly adapt to a specific mode
 by adjusting which abstraction slot it uses.
 
+Supports multiple adaptation modes for comparison:
+- gating: Only adapt gating network (ASTRAL only)
+- policy_head: Only adapt policy head (works for both ASTRAL and Baseline)
+- all_params: Adapt all parameters (full fine-tuning)
+
 Usage:
     python src/test_time_adapt.py --checkpoint results/runs/.../final_model.pt --mode 2
+    python src/test_time_adapt.py --checkpoint results/runs/.../final_model.pt --adapt_mode policy_head
 """
 
 import os
 import sys
 import argparse
 from collections import defaultdict
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Tuple, Union
 
 import json
 import numpy as np
 import torch
+import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 
@@ -30,6 +37,50 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.envs.nonstationary_cartpole import make_nonstationary_cartpole
 from src.models.astral_agent import ASTRALAgent, BaselineAgent
+
+
+def load_agent(
+    checkpoint_path: str,
+    agent_type: str = "auto",
+    device: torch.device = None,
+) -> Tuple[Union[ASTRALAgent, BaselineAgent], str]:
+    """
+    Load agent from checkpoint with auto-detection of agent type.
+    
+    Args:
+        checkpoint_path: Path to model checkpoint
+        agent_type: "auto", "astral", or "baseline"
+        device: Torch device
+        
+    Returns:
+        Tuple of (agent, detected_type)
+    """
+    if device is None:
+        device = torch.device("cpu")
+    
+    # Auto-detect from path
+    if agent_type == "auto":
+        if "baseline" in checkpoint_path.lower():
+            agent_type = "baseline"
+        else:
+            agent_type = "astral"
+    
+    checkpoint = torch.load(checkpoint_path, map_location=device)
+    
+    if agent_type == "baseline":
+        agent = BaselineAgent(obs_dim=4, action_dim=2, d_model=64).to(device)
+    else:
+        agent = ASTRALAgent(
+            obs_dim=4, action_dim=2, d_model=64, num_abstractions=3
+        ).to(device)
+    
+    # Load weights
+    if isinstance(checkpoint, dict) and 'model_state_dict' in checkpoint:
+        agent.load_state_dict(checkpoint['model_state_dict'])
+    else:
+        agent.load_state_dict(checkpoint)
+    
+    return agent, agent_type
 
 
 def evaluate_agent(
@@ -236,12 +287,237 @@ def test_time_adapt(
     }
 
 
+def test_time_adapt_policy_head(
+    agent: nn.Module,
+    target_mode: int,
+    num_adapt_episodes: int = 20,
+    adapt_lr: float = 1e-3,
+    device: torch.device = None,
+    verbose: bool = True,
+) -> Dict[str, List[float]]:
+    """
+    Adapt policy head only (for baseline comparison).
+    Works with both ASTRAL and Baseline agents.
+    
+    Args:
+        agent: ASTRAL or Baseline agent
+        target_mode: Fixed mode to adapt to
+        num_adapt_episodes: Number of adaptation episodes
+        adapt_lr: Learning rate for policy head
+        device: Torch device
+        verbose: Print progress
+        
+    Returns:
+        Dictionary with returns during adaptation
+    """
+    if device is None:
+        device = torch.device("cpu")
+    
+    # Freeze everything except policy head
+    for param in agent.parameters():
+        param.requires_grad = False
+    for param in agent.policy_head.parameters():
+        param.requires_grad = True
+    
+    trainable_params = sum(p.numel() for p in agent.parameters() if p.requires_grad)
+    if verbose:
+        print(f"Test-time adaptation: {trainable_params} trainable parameters (policy_head only)")
+    
+    optimizer = optim.Adam(agent.policy_head.parameters(), lr=adapt_lr)
+    
+    env = make_nonstationary_cartpole(mode=target_mode)
+    
+    returns = []
+    
+    for episode in range(num_adapt_episodes):
+        obs, info = env.reset()
+        obs = torch.tensor(obs, device=device, dtype=torch.float32).unsqueeze(0)
+        hidden = agent.get_initial_hidden(1, device)
+        prev_action = torch.zeros((1, 2), device=device)
+        prev_reward = torch.zeros((1, 1), device=device)
+        
+        episode_return = 0
+        episode_log_probs = []
+        episode_rewards = []
+        
+        done = False
+        
+        while not done:
+            action, log_prob, _, _, new_hidden, _ = agent.get_action_and_value(
+                obs, prev_action, prev_reward, hidden
+            )
+            
+            episode_log_probs.append(log_prob)
+            
+            next_obs, reward, terminated, truncated, info = env.step(action.item())
+            done = terminated or truncated
+            
+            episode_rewards.append(reward)
+            episode_return += reward
+            
+            obs = torch.tensor(next_obs, device=device, dtype=torch.float32).unsqueeze(0)
+            prev_action = torch.zeros((1, 2), device=device)
+            prev_action[0, action.item()] = 1.0
+            prev_reward = torch.tensor([[reward]], device=device, dtype=torch.float32)
+            hidden = new_hidden.detach()
+        
+        returns.append(episode_return)
+        
+        # REINFORCE update
+        G = 0
+        discounted_returns = []
+        for r in reversed(episode_rewards):
+            G = r + 0.99 * G
+            discounted_returns.insert(0, G)
+        
+        discounted_returns = torch.tensor(discounted_returns, device=device, dtype=torch.float32)
+        discounted_returns = (discounted_returns - discounted_returns.mean()) / (discounted_returns.std() + 1e-8)
+        
+        policy_loss = []
+        for log_prob, G in zip(episode_log_probs, discounted_returns):
+            policy_loss.append(-log_prob * G)
+        
+        optimizer.zero_grad()
+        loss = torch.stack(policy_loss).sum()
+        loss.backward()
+        optimizer.step()
+        
+        if verbose and (episode + 1) % 5 == 0:
+            print(f"  Episode {episode + 1}: Return = {episode_return:.0f}")
+    
+    env.close()
+    
+    # Restore all parameters to trainable
+    for param in agent.parameters():
+        param.requires_grad = True
+    
+    return {
+        'returns': returns,
+        'weight_histories': [],
+    }
+
+
+def test_time_adapt_all_params(
+    agent: nn.Module,
+    target_mode: int,
+    num_adapt_episodes: int = 20,
+    adapt_lr: float = 1e-4,  # Lower LR for full fine-tuning
+    device: torch.device = None,
+    verbose: bool = True,
+) -> Dict[str, List[float]]:
+    """
+    Adapt all parameters (full fine-tuning).
+    
+    Args:
+        agent: ASTRAL or Baseline agent
+        target_mode: Fixed mode to adapt to
+        num_adapt_episodes: Number of adaptation episodes
+        adapt_lr: Learning rate (lower for full fine-tuning)
+        device: Torch device
+        verbose: Print progress
+        
+    Returns:
+        Dictionary with returns during adaptation
+    """
+    if device is None:
+        device = torch.device("cpu")
+    
+    # All parameters trainable
+    for param in agent.parameters():
+        param.requires_grad = True
+    
+    trainable_params = sum(p.numel() for p in agent.parameters() if p.requires_grad)
+    if verbose:
+        print(f"Test-time adaptation: {trainable_params} trainable parameters (all_params)")
+    
+    optimizer = optim.Adam(agent.parameters(), lr=adapt_lr)
+    
+    env = make_nonstationary_cartpole(mode=target_mode)
+    
+    returns = []
+    weight_histories = []
+    
+    for episode in range(num_adapt_episodes):
+        obs, info = env.reset()
+        obs = torch.tensor(obs, device=device, dtype=torch.float32).unsqueeze(0)
+        hidden = agent.get_initial_hidden(1, device)
+        prev_action = torch.zeros((1, 2), device=device)
+        prev_reward = torch.zeros((1, 1), device=device)
+        
+        episode_return = 0
+        episode_log_probs = []
+        episode_rewards = []
+        episode_weights = []
+        
+        done = False
+        
+        while not done:
+            action, log_prob, _, _, new_hidden, weights = agent.get_action_and_value(
+                obs, prev_action, prev_reward, hidden
+            )
+            
+            episode_log_probs.append(log_prob)
+            if weights is not None:
+                episode_weights.append(weights[0].detach().cpu().numpy())
+            
+            next_obs, reward, terminated, truncated, info = env.step(action.item())
+            done = terminated or truncated
+            
+            episode_rewards.append(reward)
+            episode_return += reward
+            
+            obs = torch.tensor(next_obs, device=device, dtype=torch.float32).unsqueeze(0)
+            prev_action = torch.zeros((1, 2), device=device)
+            prev_action[0, action.item()] = 1.0
+            prev_reward = torch.tensor([[reward]], device=device, dtype=torch.float32)
+            hidden = new_hidden.detach()
+        
+        returns.append(episode_return)
+        if episode_weights:
+            weight_histories.append(np.array(episode_weights))
+        
+        # REINFORCE update
+        G = 0
+        discounted_returns = []
+        for r in reversed(episode_rewards):
+            G = r + 0.99 * G
+            discounted_returns.insert(0, G)
+        
+        discounted_returns = torch.tensor(discounted_returns, device=device, dtype=torch.float32)
+        discounted_returns = (discounted_returns - discounted_returns.mean()) / (discounted_returns.std() + 1e-8)
+        
+        policy_loss = []
+        for log_prob, G in zip(episode_log_probs, discounted_returns):
+            policy_loss.append(-log_prob * G)
+        
+        optimizer.zero_grad()
+        loss = torch.stack(policy_loss).sum()
+        loss.backward()
+        optimizer.step()
+        
+        if verbose and (episode + 1) % 5 == 0:
+            if episode_weights:
+                mean_weight = np.mean([w.mean(axis=0) for w in weight_histories[-5:]], axis=0)
+                print(f"  Episode {episode + 1}: Return = {episode_return:.0f}, Avg weights = {mean_weight}")
+            else:
+                print(f"  Episode {episode + 1}: Return = {episode_return:.0f}")
+    
+    env.close()
+    
+    return {
+        'returns': returns,
+        'weight_histories': weight_histories,
+    }
+
+
 def run_tta_experiment(
     checkpoint_path: str,
     modes: List[int] = [0, 1, 2],
     num_eval_episodes: int = 20,
     num_adapt_episodes: int = 30,
     adapt_lr: float = 1e-3,
+    adapt_mode: str = "gating",
+    agent_type: str = "auto",
     save_dir: str = "results/tta",
 ):
     """
@@ -253,6 +529,8 @@ def run_tta_experiment(
         num_eval_episodes: Episodes for evaluation
         num_adapt_episodes: Episodes for adaptation
         adapt_lr: Learning rate for TTA
+        adapt_mode: What to adapt ("gating", "policy_head", "all_params")
+        agent_type: Agent type ("auto", "astral", "baseline")
         save_dir: Directory to save results
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -262,25 +540,28 @@ def run_tta_experiment(
     
     # Load model
     print(f"\nLoading model from: {checkpoint_path}")
+    agent, detected_type = load_agent(checkpoint_path, agent_type, device)
+    print(f"Model loaded successfully (type: {detected_type})")
     
-    # Determine if it's ASTRAL or baseline
-    checkpoint = torch.load(checkpoint_path, map_location=device)
+    # Validate adapt_mode
+    if adapt_mode == "gating" and detected_type == "baseline":
+        raise ValueError("Cannot use adapt_mode='gating' with baseline agent (no gating network)")
     
-    # Create agent (assume ASTRAL for TTA experiments)
-    agent = ASTRALAgent(
-        obs_dim=4,
-        action_dim=2,
-        d_model=64,
-        num_abstractions=3,
-    ).to(device)
+    # Choose adaptation function
+    if adapt_mode == "gating":
+        adapt_fn = test_time_adapt
+        adapt_fn_name = "gating network"
+    elif adapt_mode == "policy_head":
+        adapt_fn = test_time_adapt_policy_head
+        adapt_fn_name = "policy head"
+    else:  # all_params
+        adapt_fn = test_time_adapt_all_params
+        adapt_fn_name = "all parameters"
+        # Use lower learning rate for full fine-tuning
+        if adapt_lr == 1e-3:
+            adapt_lr = 1e-4
     
-    # Load weights
-    if isinstance(checkpoint, dict) and 'model_state_dict' in checkpoint:
-        agent.load_state_dict(checkpoint['model_state_dict'])
-    else:
-        agent.load_state_dict(checkpoint)
-    
-    print(f"Model loaded successfully")
+    print(f"Adaptation mode: {adapt_mode} ({adapt_fn_name})")
     
     results = {}
     
@@ -300,8 +581,8 @@ def run_tta_experiment(
         print(f"    Mean return: {before_mean:.2f} ± {before_std:.2f}")
         
         # 2. Perform TTA
-        print(f"\n[2] Performing test-time adaptation ({num_adapt_episodes} episodes)...")
-        adapt_results = test_time_adapt(
+        print(f"\n[2] Performing test-time adaptation ({num_adapt_episodes} episodes, {adapt_mode})...")
+        adapt_results = adapt_fn(
             agent, mode, num_adapt_episodes, adapt_lr, device, verbose=True
         )
         
@@ -340,16 +621,19 @@ def run_tta_experiment(
         print(f"{mode:<10} {r['before_mean']:<15.2f} {r['after_mean']:<15.2f} {r['improvement']:+.2f}")
     
     # Plot results
-    plot_tta_results(results, save_dir)
+    plot_tta_results(results, save_dir, adapt_mode, detected_type)
     
     return results
 
 
-def plot_tta_results(results: Dict, save_dir: str):
+def plot_tta_results(results: Dict, save_dir: str, adapt_mode: str = "gating", agent_type: str = "astral"):
     """Plot TTA results."""
     modes = sorted(results.keys())
     
     fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+    
+    # Title suffix
+    title_suffix = f" ({agent_type}, {adapt_mode})"
     
     # Plot 1: Before vs After comparison
     ax1 = axes[0]
@@ -363,7 +647,7 @@ def plot_tta_results(results: Dict, save_dir: str):
     ax1.bar(x + width/2, after_means, width, label='After TTA', color='coral')
     ax1.set_xlabel('Mode')
     ax1.set_ylabel('Mean Return')
-    ax1.set_title('Before vs After TTA')
+    ax1.set_title('Before vs After TTA' + title_suffix)
     ax1.set_xticks(x)
     ax1.set_xticklabels([f'Mode {m}' for m in modes])
     ax1.legend()
@@ -400,9 +684,15 @@ def plot_tta_results(results: Dict, save_dir: str):
     print(f"\nPlot saved to: {os.path.join(save_dir, 'tta_results.png')}")
     
     # Save raw data for regenerating plots
-    data_to_save = {}
+    data_to_save = {
+        'metadata': {
+            'adapt_mode': adapt_mode,
+            'agent_type': agent_type,
+        },
+        'results': {}
+    }
     for mode in modes:
-        data_to_save[str(mode)] = {
+        data_to_save['results'][str(mode)] = {
             'before_mean': results[mode]['before_mean'],
             'after_mean': results[mode]['after_mean'],
             'improvement': results[mode]['improvement'],
@@ -429,6 +719,12 @@ def main():
                         help="Episodes for adaptation")
     parser.add_argument("--adapt_lr", type=float, default=1e-3,
                         help="Learning rate for TTA")
+    parser.add_argument("--adapt_mode", type=str, default="gating",
+                        choices=["gating", "policy_head", "all_params"],
+                        help="What to adapt: gating (ASTRAL only), policy_head, or all_params")
+    parser.add_argument("--agent_type", type=str, default="auto",
+                        choices=["auto", "astral", "baseline"],
+                        help="Agent type (auto-detects from checkpoint path)")
     parser.add_argument("--save_dir", type=str, default="results/tta",
                         help="Directory to save results")
     
@@ -440,6 +736,8 @@ def main():
         num_eval_episodes=args.num_eval_episodes,
         num_adapt_episodes=args.num_adapt_episodes,
         adapt_lr=args.adapt_lr,
+        adapt_mode=args.adapt_mode,
+        agent_type=args.agent_type,
         save_dir=args.save_dir,
     )
 
