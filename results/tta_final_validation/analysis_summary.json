@@ -1,0 +1,218 @@
+[
+  {
+    "model": "slot_dropout_0.3",
+    "adapt_mode": "gating",
+    "before": 187.36666666666667,
+    "after": 198.79999999999998,
+    "improvement": 11.433333333333328,
+    "mode_details": {
+      "0": {
+        "before": 176.4,
+        "after": 210.7,
+        "delta": 34.29999999999998
+      },
+      "1": {
+        "before": 204.75,
+        "after": 223.5,
+        "delta": 18.75
+      },
+      "2": {
+        "before": 180.95,
+        "after": 162.2,
+        "delta": -18.75
+      }
+    }
+  },
+  {
+    "model": "best_config_strong_seed123",
+    "adapt_mode": "gating",
+    "before": 314.2,
+    "after": 311.6166666666667,
+    "improvement": -2.5833333333333144,
+    "mode_details": {
+      "0": {
+        "before": 316.15,
+        "after": 317.35,
+        "delta": 1.2000000000000455
+      },
+      "1": {
+        "before": 312.2,
+        "after": 307.8,
+        "delta": -4.399999999999977
+      },
+      "2": {
+        "before": 314.25,
+        "after": 309.7,
+        "delta": -4.550000000000011
+      }
+    }
+  },
+  {
+    "model": "best_config_strong_seed42",
+    "adapt_mode": "gating",
+    "before": 490.51666666666665,
+    "after": 487.55,
+    "improvement": -2.9666666666666592,
+    "mode_details": {
+      "0": {
+        "before": 495.4,
+        "after": 497.25,
+        "delta": 1.8500000000000227
+      },
+      "1": {
+        "before": 482.1,
+        "after": 488.6,
+        "delta": 6.5
+      },
+      "2": {
+        "before": 494.05,
+        "after": 476.8,
+        "delta": -17.25
+      }
+    }
+  },
+  {
+    "model": "baseline",
+    "adapt_mode": "policy_head",
+    "before": 25.316666666666666,
+    "after": 21.366666666666664,
+    "improvement": -3.9500000000000006,
+    "mode_details": {
+      "0": {
+        "before": 23.15,
+        "after": 23.6,
+        "delta": 0.45000000000000284
+      },
+      "1": {
+        "before": 32.2,
+        "after": 21.0,
+        "delta": -11.200000000000003
+      },
+      "2": {
+        "before": 20.6,
+        "after": 19.5,
+        "delta": -1.1000000000000014
+      }
+    }
+  },
+  {
+    "model": "best_config_strong_seed456",
+    "adapt_mode": "gating",
+    "before": 444.7,
+    "after": 440.56666666666666,
+    "improvement": -4.133333333333326,
+    "mode_details": {
+      "0": {
+        "before": 482.2,
+        "after": 439.5,
+        "delta": -42.69999999999999
+      },
+      "1": {
+        "before": 490.05,
+        "after": 479.6,
+        "delta": -10.449999999999989
+      },
+      "2": {
+        "before": 361.85,
+        "after": 402.6,
+        "delta": 40.75
+      }
+    }
+  },
+  {
+    "model": "slot_dropout_0.5",
+    "adapt_mode": "gating",
+    "before": 258.8333333333333,
+    "after": 254.1833333333333,
+    "improvement": -4.650000000000006,
+    "mode_details": {
+      "0": {
+        "before": 262.1,
+        "after": 236.2,
+        "delta": -25.900000000000034
+      },
+      "1": {
+        "before": 282.45,
+        "after": 289.0,
+        "delta": 6.550000000000011
+      },
+      "2": {
+        "before": 231.95,
+        "after": 237.35,
+        "delta": 5.400000000000006
+      }
+    }
+  },
+  {
+    "model": "collapsed_default",
+    "adapt_mode": "gating",
+    "before": 499.48333333333335,
+    "after": 494.68333333333334,
+    "improvement": -4.800000000000011,
+    "mode_details": {
+      "0": {
+        "before": 498.85,
+        "after": 500.0,
+        "delta": 1.1499999999999773
+      },
+      "1": {
+        "before": 499.6,
+        "after": 500.0,
+        "delta": 0.39999999999997726
+      },
+      "2": {
+        "before": 500.0,
+        "after": 484.05,
+        "delta": -15.949999999999989
+      }
+    }
+  },
+  {
+    "model": "best_config_long",
+    "adapt_mode": "gating",
+    "before": 373.6333333333334,
+    "after": 356.34999999999997,
+    "improvement": -17.283333333333342,
+    "mode_details": {
+      "0": {
+        "before": 406.6,
+        "after": 334.8,
+        "delta": -71.80000000000001
+      },
+      "1": {
+        "before": 360.0,
+        "after": 364.2,
+        "delta": 4.199999999999989
+      },
+      "2": {
+        "before": 354.3,
+        "after": 370.05,
+        "delta": 15.75
+      }
+    }
+  },
+  {
+    "model": "diverse_strong",
+    "adapt_mode": "gating",
+    "before": 314.03333333333336,
+    "after": 249.4333333333333,
+    "improvement": -64.60000000000001,
+    "mode_details": {
+      "0": {
+        "before": 305.45,
+        "after": 269.45,
+        "delta": -36.0
+      },
+      "1": {
+        "before": 346.35,
+        "after": 245.45,
+        "delta": -100.90000000000003
+      },
+      "2": {
+        "before": 290.3,
+        "after": 233.4,
+        "delta": -56.900000000000006
+      }
+    }
+  }
+]

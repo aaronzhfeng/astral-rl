@@ -1,0 +1,305 @@
+{
+  "0": {
+    "gating": {
+      "baseline": 204.55,
+      "by_budget": {
+        "1": {
+          "score": 229.1,
+          "improvement": 24.549999999999983
+        },
+        "3": {
+          "score": 206.35,
+          "improvement": 1.799999999999983
+        },
+        "5": {
+          "score": 232.65,
+          "improvement": 28.099999999999994
+        },
+        "10": {
+          "score": 201.05,
+          "improvement": -3.5
+        },
+        "20": {
+          "score": 231.0,
+          "improvement": 26.44999999999999
+        },
+        "30": {
+          "score": 216.9,
+          "improvement": 12.349999999999994
+        },
+        "50": {
+          "score": 220.0,
+          "improvement": 15.449999999999989
+        }
+      }
+    },
+    "policy_head": {
+      "baseline": 204.55,
+      "by_budget": {
+        "1": {
+          "score": 314.0,
+          "improvement": 109.44999999999999
+        },
+        "3": {
+          "score": 332.05,
+          "improvement": 127.5
+        },
+        "5": {
+          "score": 398.05,
+          "improvement": 193.5
+        },
+        "10": {
+          "score": 344.7,
+          "improvement": 140.14999999999998
+        },
+        "20": {
+          "score": 264.7,
+          "improvement": 60.14999999999998
+        },
+        "30": {
+          "score": 22.75,
+          "improvement": -181.8
+        },
+        "50": {
+          "score": 152.65,
+          "improvement": -51.900000000000006
+        }
+      }
+    },
+    "full": {
+      "baseline": 204.55,
+      "by_budget": {
+        "1": {
+          "score": 360.8,
+          "improvement": 156.25
+        },
+        "3": {
+          "score": 67.55,
+          "improvement": -137.0
+        },
+        "5": {
+          "score": 23.6,
+          "improvement": -180.95000000000002
+        },
+        "10": {
+          "score": 201.1,
+          "improvement": -3.450000000000017
+        },
+        "20": {
+          "score": 21.0,
+          "improvement": -183.55
+        },
+        "30": {
+          "score": 313.05,
+          "improvement": 108.5
+        },
+        "50": {
+          "score": 77.5,
+          "improvement": -127.05000000000001
+        }
+      }
+    }
+  },
+  "1": {
+    "gating": {
+      "baseline": 161.35,
+      "by_budget": {
+        "1": {
+          "score": 178.4,
+          "improvement": 17.05000000000001
+        },
+        "3": {
+          "score": 160.6,
+          "improvement": -0.75
+        },
+        "5": {
+          "score": 136.65,
+          "improvement": -24.69999999999999
+        },
+        "10": {
+          "score": 137.65,
+          "improvement": -23.69999999999999
+        },
+        "20": {
+          "score": 148.25,
+          "improvement": -13.099999999999994
+        },
+        "30": {
+          "score": 150.8,
+          "improvement": -10.549999999999983
+        },
+        "50": {
+          "score": 145.2,
+          "improvement": -16.150000000000006
+        }
+      }
+    },
+    "policy_head": {
+      "baseline": 161.35,
+      "by_budget": {
+        "1": {
+          "score": 213.4,
+          "improvement": 52.05000000000001
+        },
+        "3": {
+          "score": 95.2,
+          "improvement": -66.14999999999999
+        },
+        "5": {
+          "score": 148.45,
+          "improvement": -12.900000000000006
+        },
+        "10": {
+          "score": 64.85,
+          "improvement": -96.5
+        },
+        "20": {
+          "score": 104.15,
+          "improvement": -57.19999999999999
+        },
+        "30": {
+          "score": 69.9,
+          "improvement": -91.44999999999999
+        },
+        "50": {
+          "score": 132.65,
+          "improvement": -28.69999999999999
+        }
+      }
+    },
+    "full": {
+      "baseline": 161.35,
+      "by_budget": {
+        "1": {
+          "score": 186.35,
+          "improvement": 25.0
+        },
+        "3": {
+          "score": 149.05,
+          "improvement": -12.299999999999983
+        },
+        "5": {
+          "score": 259.7,
+          "improvement": 98.35
+        },
+        "10": {
+          "score": 257.55,
+          "improvement": 96.20000000000002
+        },
+        "20": {
+          "score": 72.8,
+          "improvement": -88.55
+        },
+        "30": {
+          "score": 122.75,
+          "improvement": -38.599999999999994
+        },
+        "50": {
+          "score": 191.65,
+          "improvement": 30.30000000000001
+        }
+      }
+    }
+  },
+  "2": {
+    "gating": {
+      "baseline": 65.05,
+      "by_budget": {
+        "1": {
+          "score": 80.45,
+          "improvement": 15.400000000000006
+        },
+        "3": {
+          "score": 75.3,
+          "improvement": 10.25
+        },
+        "5": {
+          "score": 78.75,
+          "improvement": 13.700000000000003
+        },
+        "10": {
+          "score": 74.75,
+          "improvement": 9.700000000000003
+        },
+        "20": {
+          "score": 74.65,
+          "improvement": 9.600000000000009
+        },
+        "30": {
+          "score": 82.2,
+          "improvement": 17.150000000000006
+        },
+        "50": {
+          "score": 65.4,
+          "improvement": 0.3500000000000085
+        }
+      }
+    },
+    "policy_head": {
+      "baseline": 65.05,
+      "by_budget": {
+        "1": {
+          "score": 76.65,
+          "improvement": 11.600000000000009
+        },
+        "3": {
+          "score": 83.3,
+          "improvement": 18.25
+        },
+        "5": {
+          "score": 54.9,
+          "improvement": -10.149999999999999
+        },
+        "10": {
+          "score": 86.15,
+          "improvement": 21.10000000000001
+        },
+        "20": {
+          "score": 49.45,
+          "improvement": -15.599999999999994
+        },
+        "30": {
+          "score": 94.65,
+          "improvement": 29.60000000000001
+        },
+        "50": {
+          "score": 86.5,
+          "improvement": 21.450000000000003
+        }
+      }
+    },
+    "full": {
+      "baseline": 65.05,
+      "by_budget": {
+        "1": {
+          "score": 67.1,
+          "improvement": 2.049999999999997
+        },
+        "3": {
+          "score": 76.2,
+          "improvement": 11.150000000000006
+        },
+        "5": {
+          "score": 91.3,
+          "improvement": 26.25
+        },
+        "10": {
+          "score": 27.65,
+          "improvement": -37.4
+        },
+        "20": {
+          "score": 15.9,
+          "improvement": -49.15
+        },
+        "30": {
+          "score": 92.15,
+          "improvement": 27.10000000000001
+        },
+        "50": {
+          "score": 22.25,
+          "improvement": -42.8
+        }
+      }
+    }
+  }
+}
