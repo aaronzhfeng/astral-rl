@@ -1,0 +1,403 @@
+\documentclass{article}
+
+\usepackage[preprint]{neurips_2025}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{graphicx}
+\graphicspath{{./}}  % Set graphics path
+
+% Custom commands
+\newcommand{\astral}{\textsc{Astral}}
+\newcommand{\method}{\astral}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\bh}{\mathbf{h}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bA}{\mathbf{A}}
+
+\title{ASTRAL: Abstraction-Structured Test-time Reinforcement Adaptation Layer for Non-Stationary Environments}
+
+\author{%
+  Anonymous Author(s) \\
+  Institution \\
+  \texttt{anonymous@institution.edu}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Reinforcement learning agents typically assume stationary environment dynamics, yet real-world environments frequently exhibit non-stationarity through changing physics, rewards, or transition probabilities. We introduce \method{} (\textbf{A}bstraction-\textbf{S}tructured \textbf{T}est-time \textbf{R}einforcement \textbf{A}daptation \textbf{L}ayer), a novel architecture that maintains a bank of learnable abstraction vectors combined through a lightweight gating mechanism. During test-time adaptation, only the gating network is updated, enabling rapid adaptation to new environment modes while preserving learned behaviors. Through extensive experiments on a non-stationary CartPole environment with three distinct physics modes, we demonstrate that \method{} successfully learns to balance the pole under varying conditions. However, we discover a critical \emph{slot collapse} phenomenon where the abstraction bank converges to primarily use a single slot, limiting the interpretability and adaptation benefits. We systematically investigate this challenge through 33 experiments covering 7 regularization techniques and 11 hyperparameter configurations, providing insights into the fundamental difficulties of learning discrete abstractions in reinforcement learning. Our analysis reveals that while strong regularization can partially address slot collapse, there exists an inherent tension between slot diversity and task performance. We release our code and comprehensive experimental results to facilitate future research on interpretable and adaptive reinforcement learning.
+\end{abstract}
+
+%==============================================================================
+\section{Introduction}
+\label{sec:intro}
+%==============================================================================
+
+Real-world reinforcement learning (RL) applications must contend with non-stationary environments where the underlying dynamics can change over time \citep{padakandla2020survey}. A robot trained in simulation may encounter different friction coefficients when deployed in the real world. An autonomous vehicle must adapt to varying weather conditions. A game-playing agent may face opponents with changing strategies. Traditional RL algorithms assume stationary Markov Decision Processes (MDPs), making them brittle when environment dynamics shift.
+
+Existing approaches to non-stationarity fall into several categories: (1) \emph{domain randomization} \citep{tobin2017domain}, which trains on diverse conditions hoping to learn robust policies; (2) \emph{meta-learning} \citep{finn2017maml}, which explicitly optimizes for fast adaptation; and (3) \emph{context-conditioned policies} \citep{hallak2015contextual}, which learn to condition behavior on inferred environment parameters. However, these approaches often lack interpretability—it is unclear \emph{what} the agent has learned about different environment modes or \emph{how} it adapts its behavior.
+
+We propose \method{}, an architecture designed for interpretable adaptation to non-stationary environments. The key insight is to decompose the agent's internal representation into a bank of discrete \emph{abstraction slots}, each potentially capturing a different behavioral mode. A lightweight gating network determines which abstractions to use based on the current context. Crucially, at test time, only this gating network is adapted, enabling:
+
+\begin{itemize}
+    \item \textbf{Rapid adaptation}: With only $\sim$4,000 trainable parameters (vs. $\sim$51,000 total), adaptation is fast and sample-efficient.
+    \item \textbf{Interpretability}: The gating weights reveal which abstraction the agent is using, potentially corresponding to identified environment modes.
+    \item \textbf{Preserved knowledge}: Freezing the main policy prevents catastrophic forgetting during adaptation.
+\end{itemize}
+
+Through extensive experimentation, we make the following contributions:
+
+\begin{enumerate}
+    \item We introduce the \method{} architecture combining a GRU backbone with an abstraction bank and FiLM modulation (Section~\ref{sec:method}).
+    \item We discover and characterize the \emph{slot collapse} phenomenon where abstraction slots fail to specialize (Section~\ref{sec:collapse}).
+    \item We systematically evaluate 7 regularization techniques for addressing slot collapse across 33 trained models (Section~\ref{sec:experiments}).
+    \item We provide a comprehensive analysis of test-time adaptation, including failure modes and the relationship between slot diversity and adaptation success (Section~\ref{sec:tta}).
+\end{enumerate}
+
+%==============================================================================
+\section{Related Work}
+\label{sec:related}
+%==============================================================================
+
+\paragraph{Non-Stationary Reinforcement Learning.}
+Non-stationary MDPs have been studied extensively \citep{padakandla2020survey}. Hidden-mode MDPs \citep{choi2000hidden} assume the environment switches between a finite set of modes. Context-conditioned policies \citep{hallak2015contextual} learn to infer and condition on latent context. Our work is most related to approaches that maintain multiple policies or value functions for different modes \citep{da2006dealing}.
+
+\paragraph{Meta-Learning and Adaptation.}
+Model-Agnostic Meta-Learning (MAML) \citep{finn2017maml} and its variants \citep{nichol2018firstorder} learn initialization that enables fast fine-tuning. RL$^2$ \citep{duan2016rl2} and related approaches \citep{wang2016learning} use recurrent networks to adapt within episodes. Our test-time adaptation differs by freezing most parameters and only updating a small gating network.
+
+\paragraph{Mixture of Experts.}
+Mixture of Experts (MoE) architectures \citep{jacobs1991adaptive, shazeer2017outrageously} route inputs to specialized sub-networks. Recent work has applied MoE to RL \citep{ren2021probabilistic}. Our abstraction bank differs from MoE in that we use soft attention over shared abstraction vectors rather than routing to separate networks, and we modulate a shared policy head via FiLM rather than combining expert outputs.
+
+\paragraph{Interpretability in RL.}
+Interpretable RL has gained attention for safety-critical applications \citep{verma2018programmatically}. Approaches include learning decision trees \citep{bastani2018verifiable}, attention mechanisms \citep{mott2019towards}, and concept-based representations \citep{kim2018interpretability}. Our abstraction bank provides interpretability through discrete slots that can potentially be mapped to meaningful environment modes.
+
+%==============================================================================
+\section{Method}
+\label{sec:method}
+%==============================================================================
+
+\subsection{Problem Setting}
+
+We consider a non-stationary MDP $\mathcal{M} = (\mathcal{S}, \mathcal{A}, \{T_m\}_{m=1}^M, \{R_m\}_{m=1}^M, \gamma)$ where the transition dynamics $T_m$ and reward function $R_m$ depend on an unobserved mode $m \in \{1, \ldots, M\}$. The mode may change during an episode or between episodes. The agent must learn a policy that performs well across all modes and can quickly adapt when the mode distribution shifts at test time.
+
+\subsection{Architecture Overview}
+
+\method{} consists of four components (Figure~\ref{fig:architecture}):
+
+\begin{enumerate}
+    \item \textbf{Input Projection}: Maps observation $o_t$, previous action $a_{t-1}$, and previous reward $r_{t-1}$ to an embedding.
+    \item \textbf{Recurrent Backbone}: A GRU that maintains hidden state $\bh_t$ capturing temporal context.
+    \item \textbf{Abstraction Bank}: Produces abstraction $\bz_t$ and weights $\bw_t$ from context $\bh_t$.
+    \item \textbf{FiLM-Modulated Heads}: Policy and value heads that are modulated by the abstraction.
+\end{enumerate}
+
+% External figure: Architecture
+\input{asset/figure/architecture}
+
+\subsection{Abstraction Bank}
+
+The abstraction bank maintains $K$ learnable abstraction vectors $\bA = [\mathbf{a}_1, \ldots, \mathbf{a}_K] \in \R^{K \times d}$. Given context $\bh_t$, the gating network computes:
+\begin{align}
+    \text{logits} &= W_g \cdot \text{ReLU}(W_h \bh_t + b_h) + b_g \\
+    \bw_t &= \text{softmax}(\text{logits} / \tau) \\
+    \bz_t &= \sum_{k=1}^K w_{t,k} \mathbf{a}_k
+\end{align}
+where $\tau$ is a temperature parameter controlling the sharpness of the attention distribution.
+
+\subsection{FiLM Modulation}
+
+Following \citet{perez2018film}, we use Feature-wise Linear Modulation to incorporate the abstraction into the policy computation:
+\begin{align}
+    \gamma, \beta &= \text{MLP}(\bz_t) \\
+    \bh'_t &= \gamma \odot \bh_t + \beta
+\end{align}
+The modulated representation $\bh'_t$ is then passed to policy and value heads.
+
+\subsection{Training Objective}
+
+We train using Proximal Policy Optimization (PPO) \citep{schulman2017proximal} with additional regularization losses:
+\begin{align}
+    \mathcal{L} = \mathcal{L}_{\text{PPO}} + \lambda_{\text{ent}} \mathcal{L}_{\text{w-ent}} + \lambda_{\text{lb}} \mathcal{L}_{\text{lb}} + \lambda_{\text{orth}} \mathcal{L}_{\text{orth}} + \lambda_{\text{con}} \mathcal{L}_{\text{contrast}}
+\end{align}
+
+\paragraph{Weight Entropy ($\mathcal{L}_{\text{w-ent}}$).} Encourages diverse slot usage:
+\begin{align}
+    \mathcal{L}_{\text{w-ent}} = -\sum_k \bar{w}_k \log(\bar{w}_k + \epsilon)
+\end{align}
+where $\bar{w}_k$ is the mean weight for slot $k$ across the batch.
+
+\paragraph{Load Balancing ($\mathcal{L}_{\text{lb}}$).} Encourages equal slot utilization:
+\begin{align}
+    \mathcal{L}_{\text{lb}} = K \cdot \sum_k f_k \cdot \bar{w}_k
+\end{align}
+where $f_k$ is the fraction of tokens routed to slot $k$.
+
+\paragraph{Orthogonality ($\mathcal{L}_{\text{orth}}$).} Encourages diverse abstractions:
+\begin{align}
+    \mathcal{L}_{\text{orth}} = \|\bA^T \bA - I\|_F^2
+\end{align}
+
+\paragraph{Contrastive ($\mathcal{L}_{\text{contrast}}$).} Encourages mode-slot correspondence:
+\begin{align}
+    \mathcal{L}_{\text{contrast}} = -\log \frac{\exp(\bw_t^T \bw_{t'} / \tau)}{\sum_{t'' \in \text{batch}} \exp(\bw_t^T \bw_{t''} / \tau)}
+\end{align}
+where $t$ and $t'$ are from the same mode.
+
+\subsection{Test-Time Adaptation}
+
+At test time, we freeze all parameters except the gating network and adapt using REINFORCE:
+\begin{align}
+    \nabla_\theta J(\theta) \approx \sum_t \nabla_\theta \log \pi_\theta(a_t|s_t) \cdot G_t
+\end{align}
+This adapts only $\sim$4,000 parameters, preserving the learned policy while adjusting slot selection.
+
+%==============================================================================
+\section{Experimental Setup}
+\label{sec:setup}
+%==============================================================================
+
+\subsection{Environment: Non-Stationary CartPole}
+
+We modify the classic CartPole environment \citep{brockman2016gym} to include three distinct physics modes:
+
+% External table: Environment modes
+\input{asset/table/env_modes}
+
+The environment randomly switches modes at episode boundaries, creating a non-stationary setting where the agent must adapt its control strategy. Episodes terminate after 500 steps or if the pole falls.
+
+\subsection{Implementation Details}
+
+% External table: Hyperparameters
+\input{asset/table/hyperparams}
+
+We implement \method{} in PyTorch and train using PPO with the hyperparameters in Table~\ref{tab:hyperparams}. Each model has approximately 51,000 parameters, with the gating network containing approximately 4,400 trainable parameters for test-time adaptation.
+
+\subsection{Baselines and Ablations}
+
+We compare against:
+\begin{itemize}
+    \item \textbf{Baseline}: GRU-only agent without abstraction bank (same architecture minus abstraction components)
+    \item \textbf{ASTRAL variants}: Different combinations of regularization techniques
+\end{itemize}
+
+%==============================================================================
+\section{The Slot Collapse Problem}
+\label{sec:collapse}
+%==============================================================================
+
+\subsection{Phenomenon}
+
+During initial experiments, we observed that \method{} consistently converged to using a single abstraction slot, regardless of the environment mode. Table~\ref{tab:collapse} shows typical weight distributions, and Figure~\ref{fig:weight_dist} visualizes the weight distributions across modes:
+
+% External table: Slot collapse
+\input{asset/table/slot_collapse}
+
+% External figure: Weight distributions
+\input{asset/figure/weight_distributions}
+
+% External figure: Mean weights per mode
+\input{asset/figure/mean_weights}
+
+\subsection{Analysis}
+
+We identify several factors contributing to slot collapse:
+
+\paragraph{Policy Gradient Reinforcement.} Once a slot achieves slightly better performance, the policy gradient reinforces its usage, creating a positive feedback loop that suppresses other slots.
+
+\paragraph{Soft Attention Convergence.} The softmax operation naturally converges to near-one-hot distributions as the gating network learns to maximize return.
+
+\paragraph{Mode Similarity.} The three CartPole modes, while requiring different control strategies, may be similar enough that a single abstraction can achieve reasonable performance across all.
+
+\subsection{Regularization Investigation}
+
+We systematically evaluated techniques to address slot collapse:
+
+% External table: Regularization
+\input{asset/table/regularization}
+
+\paragraph{Key Finding.} There exists a \textbf{diversity-performance tradeoff}: configurations achieving high slot diversity (entropy $> 0.8$) typically sacrifice 15-40\% of peak performance. The best-performing models tend toward collapse.
+
+%==============================================================================
+\section{Experimental Results}
+\label{sec:experiments}
+%==============================================================================
+
+\subsection{Training Performance}
+
+We trained 33 models across various configurations. Figure~\ref{fig:training_comparison} shows the critical finding: \method{} successfully learns the task while the baseline completely fails.
+
+% External figure: Training comparison
+\input{asset/figure/training_comparison}
+
+Table~\ref{tab:main_results} summarizes the key results across all configurations:
+
+% External table: Main results
+\input{asset/table/main_results}
+
+\paragraph{Baseline Failure.} The GRU-only baseline achieved only $\sim$24 return (vs. 500 maximum), failing to learn the task entirely. This was unexpected and merits further investigation, but prevents direct baseline comparison.
+
+\paragraph{ASTRAL Success.} Default \method{} achieves strong performance ($\sim$370 return) but exhibits severe slot collapse (entropy $< 0.1$).
+
+\paragraph{Regularization Tradeoff.} Strong regularization achieves diverse slots ($\sim$0.89 entropy) but reduces performance by $\sim$14\% compared to collapsed models.
+
+\subsection{Causal Intervention Analysis}
+
+To understand slot specialization, we performed causal interventions on trained models:
+
+% External table: Interventions
+\input{asset/table/interventions}
+
+% External figure: Intervention experiments
+\input{asset/figure/interventions}
+
+\paragraph{Collapsed Model.} Slot 1 dominates; clamping to other slots dramatically hurts performance (Figure~\ref{fig:clamp}). No mode-slot correspondence exists.
+
+\paragraph{Diverse Model.} Performance is more robust to slot clamping, but no clear mode-slot mapping emerges. Slot 0 tends to be best for Mode 0, but the pattern is weak.
+
+%==============================================================================
+\section{Test-Time Adaptation Analysis}
+\label{sec:tta}
+%==============================================================================
+
+\subsection{TTA Experimental Setup}
+
+We evaluated test-time adaptation under three conditions:
+\begin{enumerate}
+    \item \textbf{ASTRAL + Gating TTA}: Adapt only the gating network (the intended approach)
+    \item \textbf{Baseline + Policy TTA}: Adapt the policy head of a baseline model
+    \item \textbf{ASTRAL + Policy TTA}: Adapt the policy head of ASTRAL (ablation)
+\end{enumerate}
+
+\subsection{Results}
+
+% External table: TTA results
+\input{asset/table/tta_results}
+
+% External figure: TTA comparison
+\input{asset/figure/tta_comparison}
+
+\subsection{Key Findings}
+
+\paragraph{Finding 1: TTA Does Not Improve Performance.}
+Contrary to our hypothesis, TTA did not improve performance in any configuration. Near-optimal models maintained performance (change $\approx 0$), while suboptimal models and baselines showed slight degradation.
+
+\paragraph{Finding 2: Policy-Head TTA Causes Catastrophic Forgetting.}
+Adapting the policy head instead of the gating network caused catastrophic performance collapse ($-314$ return), confirming that the gating mechanism is architecturally important.
+
+\paragraph{Finding 3: Root Cause is Slot Collapse.}
+TTA assumes the abstraction bank contains diverse, mode-specialized slots that can be reweighted. With collapsed slots, there is nothing meaningful to adapt. Table~\ref{tab:tta_weights} shows the gating weights during TTA:
+
+% External table: TTA weights
+\input{asset/table/tta_weights}
+
+The weights fluctuate but do not converge to a stable, improved configuration—indicating the slots do not encode meaningful mode-specific information.
+
+\subsection{Slot Dropout: A Path Forward}
+
+In follow-up experiments, we discovered that \textbf{slot dropout} during training creates abstractions that \emph{do} benefit from TTA. Figure~\ref{fig:tta_final} compares TTA across model types:
+
+% External figure: TTA final comparison
+\input{asset/figure/tta_final_comparison}
+
+\paragraph{Key Result.} A model trained with 30\% slot dropout achieved \textbf{+11.4 improvement} from TTA—the only positive result across all configurations. In contrast, models trained with regularization-based diversity (contrastive loss, load balancing) showed \emph{negative} TTA effects, with the strongest regularization causing catastrophic degradation ($-64.6$).
+
+\paragraph{Interpretation.} Slot dropout forces the network to learn useful representations in \emph{all} slots during training, since any slot may be masked at any time. This creates redundant but complementary abstractions that can be meaningfully reweighted at test time. Regularization-based diversity, in contrast, creates numerical diversity without functional diversity—the slots are different but not specialized for different modes.
+
+%==============================================================================
+\section{Discussion}
+\label{sec:discussion}
+%==============================================================================
+
+\subsection{Why Does Slot Collapse Occur?}
+
+We hypothesize several contributing factors:
+
+\paragraph{Reward Sparsity.} CartPole provides dense reward (+1 per step), but mode information is implicit in dynamics. The agent can achieve high return without distinguishing modes.
+
+\paragraph{Optimization Landscape.} Policy gradient methods are greedy; once a slot achieves good performance, gradients reinforce its usage, creating a ``rich get richer'' dynamic.
+
+\paragraph{Insufficient Mode Diversity.} The three CartPole modes may be too similar, allowing a single policy to generalize across all.
+
+\subsection{Implications for Interpretable RL}
+
+The slot collapse problem reveals a fundamental tension in learning discrete abstractions:
+
+\begin{quote}
+\emph{The objective (maximizing return) does not inherently require slot specialization. Any regularization that enforces diversity must trade off against task performance.}
+\end{quote}
+
+This suggests that purely self-supervised approaches to learning interpretable abstractions in RL may be insufficient. Future work may require:
+\begin{itemize}
+    \item Explicit mode supervision during training
+    \item Curriculum learning that exposes modes sequentially
+    \item Architectural constraints that enforce slot specialization
+\end{itemize}
+
+\subsection{Limitations}
+
+\begin{enumerate}
+    \item \textbf{Single Environment.} We only evaluate on CartPole; results may not generalize to more complex environments.
+    \item \textbf{Baseline Failure.} The GRU baseline failed to learn, preventing fair comparison.
+    \item \textbf{Mode Similarity.} The three modes may be too similar to require distinct strategies.
+    \item \textbf{Fixed Architecture.} We did not explore other abstraction mechanisms (e.g., VQ-VAE, slot attention).
+\end{enumerate}
+
+%==============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%==============================================================================
+
+We introduced \method{}, an architecture for interpretable adaptation in non-stationary reinforcement learning. Through extensive experimentation (33+ models, 7 regularization techniques), we discovered and characterized the \emph{slot collapse} phenomenon where abstraction banks converge to using a single slot. 
+
+Our work makes several contributions: (1) a novel architecture combining abstraction banks with FiLM modulation; (2) systematic characterization of slot collapse; (3) evaluation of regularization techniques for addressing collapse; (4) analysis revealing why test-time adaptation fails when slots are collapsed; and (5) the discovery that \textbf{slot dropout creates adaptable abstractions}—the only training method that yielded positive TTA improvement.
+
+The key insight is that \emph{numerical diversity is not sufficient}—regularization creates slots that are mathematically different but functionally equivalent. Slot dropout, by forcing the network to survive without any single slot, creates true functional redundancy that enables meaningful test-time reweighting. Future work should explore dropout-based training strategies and other methods that enforce functional rather than numerical diversity.
+
+%==============================================================================
+% References
+%==============================================================================
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+%==============================================================================
+\appendix
+\section{Additional Experimental Details}
+%==============================================================================
+
+\subsection{Complete Model Inventory}
+
+% External table: All models
+\input{asset/table/all_models}
+
+\subsection{Computational Resources}
+
+All experiments were run on a single NVIDIA GPU (CUDA-enabled). Training times:
+\begin{itemize}
+    \item 100k steps: $\sim$1 minute
+    \item 200k steps: $\sim$2 minutes
+    \item 300k steps: $\sim$3 minutes
+    \item 500k steps: $\sim$5 minutes
+\end{itemize}
+Total compute: approximately 3 GPU-hours for all 33 models.
+
+\end{document}

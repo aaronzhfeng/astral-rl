@@ -1,0 +1,16 @@
+\begin{table}[h]
+\centering
+\caption{Experiment A: Parameter-Matched Comparison ($\sim$4,300 params each)}
+\label{tab:exp_a}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Method} & \textbf{Mode 0} & \textbf{Mode 1} & \textbf{Mode 2} & \textbf{Average} \\
+\midrule
+\textbf{Gating} & -2.7 & -7.9 & \textbf{+14.7} & +1.3 \\
+Policy Head & -2.4 & \textcolor{red}{-105.0} & +10.0 & -32.5 \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}
+\small{Gating avoids catastrophic drops; policy-head causes -105 on Mode 1.}
+\end{table}
+

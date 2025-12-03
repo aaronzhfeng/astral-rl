@@ -1,0 +1,33 @@
+% Figure: ASTRAL Architecture
+% Note: Replace with actual architecture diagram when available
+\begin{figure}[t]
+    \centering
+    \fbox{
+        \begin{minipage}{0.9\textwidth}
+            \centering
+            \vspace{1em}
+            \textbf{ASTRAL Architecture Diagram}
+            \vspace{0.5em}
+            
+            \begin{tabular}{c}
+                $[o_t, a_{t-1}, r_{t-1}]$ \\
+                $\downarrow$ \\
+                \fbox{Input Projection (MLP)} \\
+                $\downarrow$ \\
+                \fbox{GRU Cell} $\rightarrow \mathbf{h}_t$ \\
+                $\downarrow$ \\
+                \fbox{Abstraction Bank} $\rightarrow \mathbf{z}_t, \mathbf{w}_t$ \\
+                $\downarrow$ \\
+                \fbox{FiLM: $\gamma \odot \mathbf{h}_t + \beta$} $\rightarrow \mathbf{h}'_t$ \\
+                $\swarrow$ \hspace{2em} $\searrow$ \\
+                \fbox{Policy Head} \hspace{1em} \fbox{Value Head} \\
+                $\downarrow$ \hspace{3em} $\downarrow$ \\
+                $\pi(a|s)$ \hspace{2.5em} $V(s)$
+            \end{tabular}
+            \vspace{1em}
+        \end{minipage}
+    }
+    \caption{\method{} architecture. The agent processes observations through a GRU backbone, then uses an Abstraction Bank to produce a weighted combination of $K$ abstraction vectors. This abstraction modulates the hidden state via FiLM before passing to policy and value heads. During test-time adaptation, only the gating network (inside Abstraction Bank) is updated.}
+    \label{fig:architecture}
+\end{figure}
+

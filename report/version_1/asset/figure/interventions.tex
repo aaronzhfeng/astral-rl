@@ -1,0 +1,23 @@
+% Figure: Causal intervention experiments (consistent plot sizes)
+\begin{figure}[t]
+    \centering
+    % Row 1: Two clamp heatmaps side by side
+    \begin{subfigure}[b]{0.95\textwidth}
+        \includegraphics[width=\textwidth]{asset/figure/clamp_experiment.png}
+        \caption{Clamp experiment}
+        \label{fig:clamp}
+    \end{subfigure}
+    
+    \vspace{1em}
+    
+    % Row 2: Single disable heatmap, centered at ~45% to match individual clamp plot size
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{asset/figure/disable_experiment.png}
+        \caption{Disable experiment}
+        \label{fig:disable}
+    \end{subfigure}
+    \caption{Causal intervention experiments. (a) \textbf{Clamp experiment}: Performance when forcing the agent to use only a single slot (clamping weights to one-hot). For collapsed models, only the dominant slot achieves good performance. (b) \textbf{Disable experiment}: Performance when disabling individual slots (setting their weight to zero and renormalizing). Disabling the dominant slot causes catastrophic failure in collapsed models.}
+    \label{fig:interventions}
+\end{figure}
+

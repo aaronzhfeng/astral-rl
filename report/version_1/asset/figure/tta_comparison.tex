@@ -1,0 +1,28 @@
+% Figure: TTA comparison across conditions (vertical layout for readability)
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}[b]{0.9\textwidth}
+        \includegraphics[width=\textwidth]{asset/figure/tta_astral_gating.png}
+        \caption{ASTRAL + Gating TTA}
+        \label{fig:tta_gating}
+    \end{subfigure}
+    
+    \vspace{1em}
+    
+    \begin{subfigure}[b]{0.9\textwidth}
+        \includegraphics[width=\textwidth]{asset/figure/tta_baseline_policy.png}
+        \caption{Baseline + Policy TTA}
+        \label{fig:tta_baseline}
+    \end{subfigure}
+    
+    \vspace{1em}
+    
+    \begin{subfigure}[b]{0.9\textwidth}
+        \includegraphics[width=\textwidth]{asset/figure/tta_astral_policy.png}
+        \caption{ASTRAL + Policy TTA (Ablation)}
+        \label{fig:tta_policy}
+    \end{subfigure}
+    \caption{Test-time adaptation comparison. Each plot shows: (left) before vs. after TTA performance, (middle) adaptation curve during 30 episodes, (right) improvement per mode. (a) ASTRAL with gating-only TTA maintains near-optimal performance. (b) Baseline with policy-head TTA shows minimal change due to poor initial performance. (c) ASTRAL with policy-head TTA causes catastrophic forgetting on 2/3 modes, demonstrating the importance of the gating mechanism.}
+    \label{fig:tta_comparison}
+\end{figure}
+

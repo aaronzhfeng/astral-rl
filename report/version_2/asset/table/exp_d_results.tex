@@ -1,0 +1,16 @@
+\begin{table}[h]
+\centering
+\caption{Experiment D: Extreme Mode Differences (gravity 5-25, length 0.3-0.8)}
+\label{tab:exp_d}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Method} & \textbf{Mode 0 $\Delta$} & \textbf{Mode 1 $\Delta$} & \textbf{Mode 2 $\Delta$} & \textbf{Average} \\
+\midrule
+\textbf{Gating} & +27.6 & -0.4 & -1.8 & \textbf{+8.5} \\
+Full Fine-Tune & +124.9 & \textcolor{red}{-103.0} & -27.6 & -1.8 \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}
+\small{Full achieves higher Mode 0 gain but catastrophically forgets Mode 1.}
+\end{table}
+

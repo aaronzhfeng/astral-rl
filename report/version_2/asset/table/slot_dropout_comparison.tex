@@ -1,0 +1,17 @@
+\begin{table}[h]
+\centering
+\caption{Effect of Slot Dropout on TTA Performance}
+\label{tab:slot_dropout}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Configuration} & \textbf{Base Return} & \textbf{TTA Improvement} & \textbf{Status} \\
+\midrule
+Slot Dropout (p=0.3) & 187.4 & \textbf{+11.4} & $\checkmark$ Best \\
+Slot Dropout (p=0.5) & 258.8 & -4.7 & Too aggressive \\
+Strong Regularization & 490.5 & -3.0 & Ceiling effect \\
+Diverse Strong & 314.0 & -64.6 & Catastrophic \\
+Collapsed Default & 499.5 & -4.8 & No diversity \\
+\bottomrule
+\end{tabular}
+\end{table}
+

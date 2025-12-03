@@ -1,0 +1,28 @@
+% Table: Main experimental results
+\begin{table}[h]
+    \caption{Main experimental results across 33 trained models. Returns are mean $\pm$ std over 3 seeds where applicable. TTA Viable indicates whether the model has sufficient slot diversity for meaningful test-time adaptation.}
+    \label{tab:main_results}
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        Model & Return & Slot Entropy & Collapsed? & TTA Viable? \\
+        \midrule
+        \multicolumn{5}{l}{\textit{Core Experiments (500k steps, 3 seeds)}} \\
+        Baseline (GRU only) & $24.2 \pm 0.7$ & — & — & No \\
+        ASTRAL (Default) & $371.3 \pm 67.8$ & $0.08 \pm 0.03$ & Yes & No \\
+        \midrule
+        \multicolumn{5}{l}{\textit{Interpretability Improvements (200k steps)}} \\
+        + Gumbel-Softmax & 223.4 & 0.18 & Yes & No \\
+        + Hard Routing & 322.5 & 0.00 & Yes & No \\
+        + Orthogonal Init & 216.6 & 0.09 & Yes & No \\
+        + Temp Annealing & 275.1 & 0.35 & Partial & No \\
+        + Contrastive ($\lambda=0.05$) & 306.0 & 0.56 & Partial & Partial \\
+        + Slot Prediction & 248.4 & 0.42 & Partial & Partial \\
+        + All Combined & 177.1 & 0.72 & No & Yes \\
+        \midrule
+        \multicolumn{5}{l}{\textit{Strong Regularization (300k steps, 3 seeds)}} \\
+        Best Config Strong & $319.3 \pm 66.4$ & $0.89 \pm 0.05$ & No & Yes \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+

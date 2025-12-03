@@ -1,0 +1,16 @@
+\begin{table}[h]
+\centering
+\caption{Experiment B: Catastrophic Forgetting (adapt Mode 0, evaluate all)}
+\label{tab:exp_b}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Method} & \textbf{Mode 0 After} & \textbf{Mode 1 $\Delta$} & \textbf{Mode 2 $\Delta$} & \textbf{Total Forgetting} \\
+\midrule
+\textbf{Gating} & 163.9 & \textbf{-0.2} & -25.6 & \textbf{-25.8} \\
+Full Fine-Tune & 62.9 & \textcolor{red}{-143.5} & \textcolor{red}{-106.6} & \textcolor{red}{-250.1} \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}
+\small{\textbf{Key Result}: Gating causes \textbf{10$\times$ less forgetting} than full fine-tuning.}
+\end{table}
+

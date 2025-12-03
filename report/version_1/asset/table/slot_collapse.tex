@@ -1,0 +1,27 @@
+% Table: Slot weight distributions across training configurations
+\begin{table}[h]
+    \caption{Slot weight distributions across training configurations. ``Entropy'' measures slot diversity (max = 1.1 for 3 slots). Collapsed models show near-zero entropy with one dominant slot.}
+    \label{tab:collapse}
+    \centering
+    \begin{tabular}{lccccc}
+        \toprule
+        Configuration & Slot 0 & Slot 1 & Slot 2 & Entropy & Mean Return \\
+        \midrule
+        \multicolumn{6}{l}{\textit{Baseline Configurations}} \\
+        Default ASTRAL & 0.00 & 0.99 & 0.01 & 0.06 & 439.6 \\
+        \midrule
+        \multicolumn{6}{l}{\textit{Individual Improvements}} \\
+        + Gumbel-Softmax & 0.02 & 0.96 & 0.02 & 0.18 & 223.4 \\
+        + Hard Routing & 0.00 & 1.00 & 0.00 & 0.00 & 322.5 \\
+        + Orthogonal Init & 0.01 & 0.98 & 0.01 & 0.09 & 216.6 \\
+        + Temp Annealing (5→0.5) & 0.05 & 0.90 & 0.05 & 0.35 & 275.1 \\
+        + Contrastive ($\lambda=0.05$) & 0.10 & 0.80 & 0.10 & 0.56 & 306.0 \\
+        + Slot Prediction & 0.08 & 0.84 & 0.08 & 0.42 & 248.4 \\
+        \midrule
+        \multicolumn{6}{l}{\textit{Combined Configurations}} \\
+        All Improvements & 0.15 & 0.70 & 0.15 & 0.72 & 177.1 \\
+        Strong Reg (Best) & 0.56 & 0.41 & 0.02 & 0.92 & 253.4 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+

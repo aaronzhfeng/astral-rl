@@ -1,0 +1,20 @@
+% Table: Gating weight evolution during TTA
+\begin{table}[h]
+    \caption{Gating weight evolution during test-time adaptation on suboptimal model (interp\_all). Weights fluctuate but do not converge to a stable configuration, indicating slots do not encode meaningful mode-specific information.}
+    \label{tab:tta_weights}
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        Episode & Slot 0 & Slot 1 & Slot 2 & Dominant \\
+        \midrule
+        0 (Initial) & 0.25 & 0.19 & \textbf{0.56} & Slot 2 \\
+        5 & 0.25 & 0.19 & \textbf{0.56} & Slot 2 \\
+        10 & 0.33 & 0.19 & \textbf{0.49} & Slot 2 \\
+        15 & 0.28 & 0.16 & \textbf{0.56} & Slot 2 \\
+        20 & 0.22 & 0.14 & \textbf{0.64} & Slot 2 \\
+        25 & 0.25 & 0.12 & \textbf{0.63} & Slot 2 \\
+        30 (Final) & 0.32 & 0.12 & \textbf{0.56} & Slot 2 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+

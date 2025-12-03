@@ -1,0 +1,33 @@
+% Table: Hyperparameters for ASTRAL training
+\begin{table}[h]
+    \caption{Hyperparameters for \method{} training. Default values used unless otherwise specified.}
+    \label{tab:hyperparams}
+    \centering
+    \begin{tabular}{lcc}
+        \toprule
+        Hyperparameter & Symbol & Value \\
+        \midrule
+        \multicolumn{3}{l}{\textit{Architecture}} \\
+        Hidden dimension & $d$ & 64 \\
+        Number of abstractions & $K$ & 3 \\
+        Temperature & $\tau$ & 1.0 \\
+        \midrule
+        \multicolumn{3}{l}{\textit{PPO Training}} \\
+        Learning rate & $\alpha$ & $2.5 \times 10^{-4}$ \\
+        PPO clip range & $\epsilon$ & 0.2 \\
+        GAE lambda & $\lambda_{\text{GAE}}$ & 0.95 \\
+        Discount factor & $\gamma$ & 0.99 \\
+        Number of environments & — & 8 \\
+        Steps per rollout & — & 128 \\
+        Minibatch size & — & 256 \\
+        PPO epochs & — & 4 \\
+        \midrule
+        \multicolumn{3}{l}{\textit{Regularization (when enabled)}} \\
+        Weight entropy & $\lambda_{\text{ent}}$ & 0.001--0.1 \\
+        Load balancing & $\lambda_{\text{lb}}$ & 0.001--0.1 \\
+        Orthogonality & $\lambda_{\text{orth}}$ & 0.0001--0.01 \\
+        Contrastive & $\lambda_{\text{con}}$ & 0.01--0.5 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+

@@ -1,0 +1,45 @@
+% Table: All 33 trained models with full details (Appendix)
+\begin{table}[h]
+    \caption{Complete inventory of all 33 trained models with configurations and results.}
+    \label{tab:all_models}
+    \centering
+    \small
+    \begin{tabular}{llccc}
+        \toprule
+        Model Name & Configuration & Steps & Return & Entropy \\
+        \midrule
+        \multicolumn{5}{l}{\textit{Core Experiments}} \\
+        astral\_42 & Default ASTRAL & 500k & 439.6 & 0.06 \\
+        astral\_123 & Default ASTRAL & 500k & 370.2 & 0.08 \\
+        astral\_456 & Default ASTRAL & 500k & 304.1 & 0.09 \\
+        baseline\_42 & GRU only (no abstractions) & 500k & 24.6 & — \\
+        baseline\_123 & GRU only (no abstractions) & 500k & 24.7 & — \\
+        baseline\_456 & GRU only (no abstractions) & 500k & 23.4 & — \\
+        \midrule
+        \multicolumn{5}{l}{\textit{Interpretability Improvements}} \\
+        interp\_gumbel & Gumbel-Softmax & 200k & 223.4 & 0.18 \\
+        interp\_hard & Hard Routing & 200k & 322.5 & 0.00 \\
+        interp\_orth & Orthogonal Init & 200k & 216.6 & 0.09 \\
+        interp\_temp\_anneal & Temp Anneal (5→0.5) & 200k & 275.1 & 0.35 \\
+        interp\_contrast & Contrastive ($\lambda=0.05$) & 200k & 306.0 & 0.56 \\
+        interp\_slot\_pred & Slot Prediction & 200k & 248.4 & 0.42 \\
+        interp\_all & All Combined & 200k & 177.1 & 0.72 \\
+        \midrule
+        \multicolumn{5}{l}{\textit{Strong Regularization Sweep}} \\
+        strong\_contrast\_0.1 & Contrastive ($\lambda=0.1$) & 300k & 340.2 & 0.72 \\
+        strong\_contrast\_0.2 & Contrastive ($\lambda=0.2$) & 300k & 411.2 & 0.85 \\
+        strong\_contrast\_0.5 & Contrastive ($\lambda=0.5$) & 300k & 353.5 & 0.91 \\
+        strong\_lb\_0.05 & Load Balance ($\lambda=0.05$) & 300k & 197.5 & 0.45 \\
+        strong\_lb\_0.1 & Load Balance ($\lambda=0.1$) & 300k & 360.0 & 0.68 \\
+        strong\_w\_ent\_0.05 & Weight Entropy ($\lambda=0.05$) & 300k & 464.6 & 0.78 \\
+        strong\_w\_ent\_0.1 & Weight Entropy ($\lambda=0.1$) & 300k & 254.6 & 0.82 \\
+        strong\_all\_reg & Combined Strong & 300k & 352.9 & 0.89 \\
+        \midrule
+        \multicolumn{5}{l}{\textit{Best Configuration (3 seeds)}} \\
+        best\_config\_42 & Gumbel+TempAnneal+Contrast+LB & 300k & 253.4 & 0.92 \\
+        best\_config\_123 & Gumbel+TempAnneal+Contrast+LB & 300k & 318.5 & 0.87 \\
+        best\_config\_456 & Gumbel+TempAnneal+Contrast+LB & 300k & 386.0 & 0.88 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+

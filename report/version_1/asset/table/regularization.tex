@@ -1,0 +1,31 @@
+% Table: Regularization techniques for slot collapse
+\begin{table}[h]
+    \caption{Regularization techniques for addressing slot collapse. Strong regularization ($\lambda \geq 0.1$) improves diversity but often reduces task performance.}
+    \label{tab:regularization}
+    \centering
+    \begin{tabular}{llcccc}
+        \toprule
+        Technique & $\lambda$ & Entropy & Return & Collapse? & Notes \\
+        \midrule
+        None (baseline) & — & 0.06 & 439.6 & Yes & Single slot dominates \\
+        \midrule
+        \multicolumn{6}{l}{\textit{Contrastive Loss}} \\
+        Contrastive & 0.05 & 0.56 & 306.0 & Partial & Some diversity \\
+        Contrastive & 0.10 & 0.72 & 340.2 & Partial & Better diversity \\
+        Contrastive & 0.20 & 0.85 & 411.2 & No & Good balance \\
+        Contrastive & 0.50 & 0.91 & 353.5 & No & High diversity \\
+        \midrule
+        \multicolumn{6}{l}{\textit{Load Balancing}} \\
+        Load Balance & 0.05 & 0.45 & 197.5 & Partial & Hurts performance \\
+        Load Balance & 0.10 & 0.68 & 360.0 & Partial & Moderate tradeoff \\
+        \midrule
+        \multicolumn{6}{l}{\textit{Weight Entropy}} \\
+        Weight Entropy & 0.05 & 0.78 & 464.6 & No & \textbf{Best return} \\
+        Weight Entropy & 0.10 & 0.82 & 254.6 & No & Performance drop \\
+        \midrule
+        \multicolumn{6}{l}{\textit{Combined}} \\
+        All Strong & Multiple & 0.89 & 352.9 & No & Good diversity \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+

@@ -1,0 +1,22 @@
+% Table: Test-time adaptation results
+\begin{table}[h]
+    \caption{Test-time adaptation results. ``Before'' and ``After'' show mean returns over 20 evaluation episodes before and after 30 adaptation episodes. TTA does not improve performance in any configuration tested.}
+    \label{tab:tta}
+    \centering
+    \begin{tabular}{llccc}
+        \toprule
+        Model & Adapt Mode & Before & After & Change \\
+        \midrule
+        \multicolumn{5}{l}{\textit{Near-Optimal Model (best\_config\_strong, seed 42)}} \\
+        ASTRAL & Gating only & 494.7 & 491.4 & $-3.2$ \\
+        ASTRAL & Policy head & 493.3 & 179.3 & $\mathbf{-314.0}$ \\
+        \midrule
+        \multicolumn{5}{l}{\textit{Suboptimal Model (interp\_all, seed 42)}} \\
+        ASTRAL & Gating only & 187.5 & 161.5 & $-26.0$ \\
+        \midrule
+        \multicolumn{5}{l}{\textit{Baseline Model (no abstractions, seed 42)}} \\
+        Baseline & Policy head & 23.8 & 21.9 & $-1.9$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+

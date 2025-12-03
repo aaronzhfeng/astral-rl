@@ -1,0 +1,17 @@
+\begin{table}[h]
+\centering
+\caption{Slot Collapse: Weight distributions without regularization}
+\label{tab:collapse}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Model} & \textbf{Slot 0} & \textbf{Slot 1} & \textbf{Slot 2} & \textbf{Collapsed?} \\
+\midrule
+Default (seed 42) & 0.00 & \textbf{1.00} & 0.00 & Yes \\
+Default (seed 123) & 0.00 & \textbf{1.00} & 0.00 & Yes \\
+Default (seed 456) & 0.00 & 0.00 & \textbf{1.00} & Yes \\
+\midrule
+With Regularization & 0.56 & 0.41 & 0.02 & Partial \\
+\bottomrule
+\end{tabular}
+\end{table}
+

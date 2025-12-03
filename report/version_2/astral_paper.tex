@@ -1,0 +1,289 @@
+\documentclass{article}
+
+\usepackage[preprint]{neurips_2025}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{subcaption}
+\usepackage{multirow}
+\graphicspath{{./asset/figure/}}
+
+% Custom commands
+\newcommand{\astral}{\textsc{Astral}}
+\newcommand{\method}{\astral}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\bh}{\mathbf{h}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bA}{\mathbf{A}}
+
+\title{ASTRAL: Stable Test-Time Adaptation via Abstraction-Structured Gating for Non-Stationary Reinforcement Learning}
+
+\author{%
+  Anonymous Author(s) \\
+  Institution \\
+  \texttt{anonymous@institution.edu}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Reinforcement learning agents deployed in non-stationary environments must adapt to changing dynamics without catastrophic forgetting of previously learned behaviors. We introduce \method{} (\textbf{A}bstraction-\textbf{S}tructured \textbf{T}est-time \textbf{R}einforcement \textbf{A}daptation \textbf{L}ayer), an architecture that maintains a bank of learnable abstraction vectors combined through a lightweight gating mechanism. At test time, only the gating network ($\sim$4,300 parameters) is adapted, while the policy remains frozen. Through systematic comparison against full fine-tuning on a non-stationary CartPole environment, we demonstrate that \method{}'s gating-only adaptation achieves \textbf{10$\times$ less catastrophic forgetting} compared to full parameter adaptation. While full fine-tuning achieves higher peak improvement on individual modes (+77 vs +11), it causes severe performance collapse on non-adapted modes ($-143$ vs $-0.2$). We further show that gating adaptation maintains consistent, low-variance performance across all episode budgets (1-50), whereas policy-head and full fine-tuning exhibit high variance with frequent catastrophic failures. Our results suggest that \method{} is particularly suited for \emph{risk-averse} deployment scenarios where stable adaptation across multiple modes is more important than maximum single-mode improvement.
+\end{abstract}
+
+%==============================================================================
+\section{Introduction}
+\label{sec:intro}
+%==============================================================================
+
+Real-world reinforcement learning applications must contend with non-stationary environments where dynamics change over time \citep{padakandla2020survey}. A robot trained in simulation encounters different friction coefficients in deployment. An autonomous vehicle must adapt to varying weather conditions. Traditional approaches to this challenge include domain randomization \citep{tobin2017domain}, meta-learning \citep{finn2017maml}, and context-conditioned policies \citep{hallak2015contextual}.
+
+A critical but often overlooked consideration is \emph{how} adaptation affects performance on other environment modes. An agent that perfectly adapts to Mode A but forgets Mode B may be worse than an agent that moderately handles both. This is especially important in multi-modal deployments where the agent must maintain competence across all conditions.
+
+We introduce \method{}, an architecture designed for \textbf{stable, forgetting-resistant adaptation}. The key insight is to decompose the agent's representation into a bank of abstraction slots combined through a lightweight gating network. At test time, only the gating weights are adapted:
+
+\begin{itemize}
+    \item \textbf{Stability}: With the policy frozen, adaptation cannot catastrophically destroy learned behaviors
+    \item \textbf{Efficiency}: Only $\sim$4,300 parameters (8\% of total) are updated
+    \item \textbf{Predictability}: Low-variance adaptation across all episode budgets
+\end{itemize}
+
+Our contributions are:
+\begin{enumerate}
+    \item The \method{} architecture combining abstraction banks with FiLM modulation (Section~\ref{sec:method})
+    \item Discovery and mitigation of \emph{slot collapse} via slot dropout (Section~\ref{sec:collapse})
+    \item \textbf{Fair comparison experiments} demonstrating that gating adaptation provides 10$\times$ less forgetting than full fine-tuning (Section~\ref{sec:fair_comparison})
+    \item Analysis showing gating is the \emph{safest} adaptation strategy across varying episode budgets (Section~\ref{sec:fewshot})
+\end{enumerate}
+
+%==============================================================================
+\section{Related Work}
+\label{sec:related}
+%==============================================================================
+
+\paragraph{Non-Stationary RL.}
+Hidden-mode MDPs \citep{choi2000hidden} and context-conditioned policies \citep{hallak2015contextual} address non-stationarity by conditioning on inferred context. Our work focuses on \emph{test-time} adaptation rather than inference of hidden modes.
+
+\paragraph{Continual Learning and Catastrophic Forgetting.}
+Catastrophic forgetting \citep{mccloskey1989catastrophic, kirkpatrick2017overcoming} occurs when neural networks lose previously learned knowledge when trained on new tasks. Elastic Weight Consolidation (EWC) \citep{kirkpatrick2017overcoming} and Progressive Neural Networks \citep{rusu2016progressive} address this in supervised learning. Our gating-only adaptation provides a structural solution: the policy cannot forget because it is never updated.
+
+\paragraph{Meta-Learning.}
+MAML \citep{finn2017maml} learns initializations for fast fine-tuning. RL$^2$ \citep{duan2016rl2} uses recurrent networks for in-context adaptation. Our approach differs by \emph{freezing} most parameters rather than fine-tuning all of them.
+
+\paragraph{Mixture of Experts.}
+MoE architectures \citep{jacobs1991adaptive, shazeer2017outrageously} route inputs to specialized sub-networks. \method{} uses soft attention over shared abstraction vectors rather than discrete routing, and modulates via FiLM \citep{perez2018film} rather than output combination.
+
+%==============================================================================
+\section{Method}
+\label{sec:method}
+%==============================================================================
+
+\subsection{Architecture Overview}
+
+\method{} consists of four components:
+\begin{enumerate}
+    \item \textbf{Input Projection}: Maps observation $o_t$, previous action $a_{t-1}$, and reward $r_{t-1}$ to embedding
+    \item \textbf{Recurrent Backbone}: GRU maintaining hidden state $\bh_t$
+    \item \textbf{Abstraction Bank}: Produces abstraction $\bz_t$ and weights $\bw_t$ from $\bh_t$
+    \item \textbf{FiLM-Modulated Heads}: Policy and value heads modulated by abstraction
+\end{enumerate}
+
+\subsection{Abstraction Bank}
+
+The abstraction bank maintains $K$ learnable vectors $\bA = [\mathbf{a}_1, \ldots, \mathbf{a}_K] \in \R^{K \times d}$. Given context $\bh_t$, the gating network computes:
+\begin{align}
+    \bw_t &= \text{softmax}(W_g \cdot \text{ReLU}(W_h \bh_t) / \tau) \\
+    \bz_t &= \sum_{k=1}^K w_{t,k} \mathbf{a}_k
+\end{align}
+
+\subsection{FiLM Modulation}
+
+Following \citet{perez2018film}:
+\begin{align}
+    \gamma, \beta &= \text{MLP}(\bz_t) \\
+    \bh'_t &= \gamma \odot \bh_t + \beta
+\end{align}
+
+\subsection{Training with Slot Dropout}
+
+We train using PPO \citep{schulman2017proximal} with \textbf{slot dropout}: during training, each slot weight is zeroed with probability $p$ and weights are renormalized. This prevents any single slot from dominating and creates functionally diverse abstractions.
+
+\subsection{Test-Time Adaptation}
+
+At test time, we freeze all parameters except the gating network ($W_g$, $W_h$) and adapt using REINFORCE:
+\begin{align}
+    \nabla_\theta J(\theta) \approx \sum_t \nabla_\theta \log \pi_\theta(a_t|s_t) \cdot G_t
+\end{align}
+This adapts only $\sim$4,300 parameters while preserving the learned policy.
+
+%==============================================================================
+\section{Experimental Setup}
+\label{sec:setup}
+%==============================================================================
+
+\subsection{Environment: Non-Stationary CartPole}
+
+We modify CartPole \citep{brockman2016gym} with three physics modes:
+
+\input{asset/table/env_modes}
+
+\subsection{Baselines}
+
+\begin{itemize}
+    \item \textbf{SB3 PPO}: Stable-Baselines3 PPO \citep{stable-baselines3} trained on the same environment (100k steps, ~443 mean return)
+    \item \textbf{Full Fine-Tuning}: Adapting all ASTRAL parameters at test time
+    \item \textbf{Policy-Head Fine-Tuning}: Adapting only the policy head (~4,300 params, matched to gating)
+\end{itemize}
+
+\subsection{Adaptation Protocol}
+
+For each adaptation experiment:
+\begin{enumerate}
+    \item Evaluate on target mode (20 episodes) $\rightarrow$ ``Before'' score
+    \item Adapt for $N$ episodes on target mode
+    \item Evaluate again (20 episodes) $\rightarrow$ ``After'' score
+    \item For forgetting tests: also evaluate on non-adapted modes
+\end{enumerate}
+
+%==============================================================================
+\section{Slot Collapse and Mitigation}
+\label{sec:collapse}
+%==============================================================================
+
+\subsection{The Slot Collapse Problem}
+
+Without regularization, \method{} converges to using a single abstraction slot regardless of environment mode:
+
+\input{asset/table/slot_collapse}
+
+\subsection{Slot Dropout as Solution}
+
+We found that \textbf{slot dropout} during training (probability $p=0.3$) creates diverse, functionally useful abstractions:
+
+\input{asset/table/slot_dropout_comparison}
+
+Key insight: Regularization (contrastive loss, load balancing) creates \emph{numerical} diversity but not \emph{functional} diversity. Slot dropout forces the network to learn useful representations in all slots.
+
+%==============================================================================
+\section{Fair Comparison Experiments}
+\label{sec:fair_comparison}
+%==============================================================================
+
+We designed four experiments to fairly compare \method{}'s gating adaptation against alternatives.
+
+\subsection{Experiment A: Parameter-Matched Comparison}
+
+\textbf{Question}: Is gating adaptation better than policy-head adaptation with the same parameter budget (~4,300 params)?
+
+\input{asset/table/exp_a_results}
+
+\textbf{Finding}: Gating is more stable. Policy-head adaptation caused -105 drop on Mode 1 (catastrophic forgetting), while gating's worst case was -7.9.
+
+\subsection{Experiment B: Catastrophic Forgetting Test}
+
+\textbf{Question}: How much do non-adapted modes degrade when adapting to one mode?
+
+\textbf{Protocol}: Adapt to Mode 0 only, then evaluate on all modes.
+
+\input{asset/table/exp_b_results}
+
+\textbf{Finding}: \textbf{Gating causes 10$\times$ less forgetting} (-25.8 total) compared to full fine-tuning (-250.1 total). Mode 1 is almost perfectly preserved with gating (-0.2 vs -143.5).
+
+\subsection{Experiment C: Few-Shot Adaptation Speed}
+
+\textbf{Question}: Which method adapts fastest with limited episodes?
+
+\input{asset/table/exp_c_results}
+
+\input{asset/figure/fewshot_comparison}
+
+\textbf{Finding}: 
+\begin{itemize}
+    \item \textbf{Gating}: Consistent positive improvement (1-20 episodes), never catastrophic
+    \item \textbf{Policy-head}: Peaks at 5 episodes (+155.7) but collapses after 20 (-122.7)
+    \item \textbf{Full}: Highly unstable, frequent catastrophic failures
+\end{itemize}
+
+\subsection{Experiment D: Extreme Mode Differences}
+
+\textbf{Question}: How do methods perform when modes are more different (gravity 5-25, length 0.3-0.8)?
+
+\input{asset/table/exp_d_results}
+
+\textbf{Finding}: On extreme modes, gating maintains positive average improvement (+8.5) while full fine-tuning degrades (-1.8 average, -103 on Mode 1).
+
+%==============================================================================
+\section{Analysis}
+\label{sec:analysis}
+%==============================================================================
+
+\subsection{Why Gating Provides Stability}
+
+The frozen policy acts as an ``anchor'' that cannot be corrupted. The gating network can only \emph{reweight} existing abstractions, not create new behaviors. This structural constraint limits both upside (maximum improvement) and downside (catastrophic failure).
+
+\subsection{When to Use \method{}}
+
+\input{asset/table/when_to_use}
+
+\subsection{Limitations}
+
+\begin{enumerate}
+    \item \textbf{Lower peak improvement}: Full fine-tuning achieves +77 vs gating's +11
+    \item \textbf{Requires slot dropout}: Without it, slot collapse prevents meaningful TTA
+    \item \textbf{Single environment}: Results may not generalize beyond CartPole
+\end{enumerate}
+
+%==============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%==============================================================================
+
+We introduced \method{}, an architecture for stable test-time adaptation in non-stationary RL. Our key finding is that \textbf{stability and maximum improvement are fundamentally in tension}. Full fine-tuning achieves higher peak gains but causes 10$\times$ more forgetting and frequent catastrophic failures.
+
+\method{}'s gating-only adaptation provides:
+\begin{itemize}
+    \item \textbf{10$\times$ less forgetting} on non-adapted modes
+    \item \textbf{Consistent performance} across all episode budgets
+    \item \textbf{No catastrophic failures} in any tested configuration
+\end{itemize}
+
+We recommend \method{} for \emph{risk-averse} deployments where maintaining competence across all modes is more important than maximizing single-mode performance. Future work should explore functional diversity mechanisms beyond slot dropout and extend to more complex environments.
+
+%==============================================================================
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+%==============================================================================
+\appendix
+\section{Additional Results}
+%==============================================================================
+
+\subsection{Training Comparison}
+
+\input{asset/figure/training_comparison}
+
+\subsection{Slot Weight Distributions}
+
+\input{asset/figure/weight_distributions}
+
+\subsection{Extreme Few-Shot Results}
+
+\input{asset/table/extreme_fewshot}
+
+\end{document}
+

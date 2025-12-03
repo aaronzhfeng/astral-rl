@@ -1,0 +1,157 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{padakandla2020survey}
+\citation{tobin2017domain}
+\citation{finn2017maml}
+\citation{hallak2015contextual}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
+\citation{padakandla2020survey}
+\citation{choi2000hidden}
+\citation{hallak2015contextual}
+\citation{da2006dealing}
+\citation{finn2017maml}
+\citation{nichol2018firstorder}
+\citation{duan2016rl2}
+\citation{wang2016learning}
+\citation{jacobs1991adaptive,shazeer2017outrageously}
+\citation{ren2021probabilistic}
+\citation{verma2018programmatically}
+\citation{bastani2018verifiable}
+\citation{mott2019towards}
+\citation{kim2018interpretability}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}\protected@file@percent }
+\newlabel{sec:related}{{2}{2}{Related Work}{section.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Non-Stationary Reinforcement Learning.}{2}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Meta-Learning and Adaptation.}{2}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mixture of Experts.}{2}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Interpretability in RL.}{2}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Method}{2}{section.3}\protected@file@percent }
+\newlabel{sec:method}{{3}{2}{Method}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Problem Setting}{2}{subsection.3.1}\protected@file@percent }
+\citation{perez2018film}
+\citation{schulman2017proximal}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textsc  {Astral}{} architecture. The agent processes observations through a GRU backbone, then uses an Abstraction Bank to produce a weighted combination of $K$ abstraction vectors. This abstraction modulates the hidden state via FiLM before passing to policy and value heads. During test-time adaptation, only the gating network (inside Abstraction Bank) is updated.}}{3}{figure.caption.6}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:architecture}{{1}{3}{\method {} architecture. The agent processes observations through a GRU backbone, then uses an Abstraction Bank to produce a weighted combination of $K$ abstraction vectors. This abstraction modulates the hidden state via FiLM before passing to policy and value heads. During test-time adaptation, only the gating network (inside Abstraction Bank) is updated}{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Architecture Overview}{3}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Abstraction Bank}{3}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}FiLM Modulation}{3}{subsection.3.4}\protected@file@percent }
+\citation{brockman2016gym}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Training Objective}{4}{subsection.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Weight Entropy ($\mathcal  {L}_{\text  {w-ent}}$).}{4}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Load Balancing ($\mathcal  {L}_{\text  {lb}}$).}{4}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Orthogonality ($\mathcal  {L}_{\text  {orth}}$).}{4}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Contrastive ($\mathcal  {L}_{\text  {contrast}}$).}{4}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Test-Time Adaptation}{4}{subsection.3.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experimental Setup}{4}{section.4}\protected@file@percent }
+\newlabel{sec:setup}{{4}{4}{Experimental Setup}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Environment: Non-Stationary CartPole}{4}{subsection.4.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Non-Stationary CartPole environment modes. Each mode represents different physics parameters that the agent must adapt to.}}{4}{table.caption.11}\protected@file@percent }
+\newlabel{tab:modes}{{1}{4}{Non-Stationary CartPole environment modes. Each mode represents different physics parameters that the agent must adapt to}{table.caption.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Hyperparameters for \textsc  {Astral}{} training. Default values used unless otherwise specified.}}{5}{table.caption.12}\protected@file@percent }
+\newlabel{tab:hyperparams}{{2}{5}{Hyperparameters for \method {} training. Default values used unless otherwise specified}{table.caption.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Implementation Details}{5}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Baselines and Ablations}{5}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}The Slot Collapse Problem}{5}{section.5}\protected@file@percent }
+\newlabel{sec:collapse}{{5}{5}{The Slot Collapse Problem}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Phenomenon}{5}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Analysis}{5}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Policy Gradient Reinforcement.}{5}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Soft Attention Convergence.}{5}{section*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mode Similarity.}{5}{section*.18}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Slot weight distributions across training configurations. ``Entropy'' measures slot diversity (max = 1.1 for 3 slots). Collapsed models show near-zero entropy with one dominant slot.}}{6}{table.caption.13}\protected@file@percent }
+\newlabel{tab:collapse}{{3}{6}{Slot weight distributions across training configurations. ``Entropy'' measures slot diversity (max = 1.1 for 3 slots). Collapsed models show near-zero entropy with one dominant slot}{table.caption.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Distribution of gating weights across environment modes for a trained \textsc  {Astral}{} model. Each subplot shows the histogram of weights for one slot across all timesteps within each mode. In collapsed models (left), one slot dominates regardless of mode. In diverse models (right), weight distributions vary by mode, though clear mode-slot correspondence remains weak.}}{6}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:weight_dist}{{2}{6}{Distribution of gating weights across environment modes for a trained \method {} model. Each subplot shows the histogram of weights for one slot across all timesteps within each mode. In collapsed models (left), one slot dominates regardless of mode. In diverse models (right), weight distributions vary by mode, though clear mode-slot correspondence remains weak}{figure.caption.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Regularization Investigation}{6}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Key Finding.}{6}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Experimental Results}{6}{section.6}\protected@file@percent }
+\newlabel{sec:experiments}{{6}{6}{Experimental Results}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Training Performance}{6}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Baseline Failure.}{6}{section*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{ASTRAL Success.}{6}{section*.24}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Mean gating weights per mode for a trained \textsc  {Astral}{} model. Each bar group shows the average weight assigned to each slot when operating in a specific mode. Ideally, different modes would preferentially use different slots, creating a diagonal pattern. The observed pattern shows partial differentiation but significant overlap.}}{7}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:mean_weights}{{3}{7}{Mean gating weights per mode for a trained \method {} model. Each bar group shows the average weight assigned to each slot when operating in a specific mode. Ideally, different modes would preferentially use different slots, creating a diagonal pattern. The observed pattern shows partial differentiation but significant overlap}{figure.caption.15}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Regularization techniques for addressing slot collapse. Strong regularization ($\lambda \geq 0.1$) improves diversity but often reduces task performance.}}{7}{table.caption.19}\protected@file@percent }
+\newlabel{tab:regularization}{{4}{7}{Regularization techniques for addressing slot collapse. Strong regularization ($\lambda \geq 0.1$) improves diversity but often reduces task performance}{table.caption.19}{}}
+\@writefile{toc}{\contentsline {paragraph}{Regularization Tradeoff.}{7}{section*.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Causal Intervention Analysis}{7}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Collapsed Model.}{7}{section*.28}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Training performance comparison between \textsc  {Astral}{} and the GRU-only baseline. \textbf  {Left}: Learning curves over 100k training steps (3 seeds each, smoothed). \textsc  {Astral}{} successfully learns to solve the task while the baseline fails entirely. \textbf  {Right}: Final performance (mean of last 50 episodes). The abstraction bank architecture enables learning even when slot collapse occurs, suggesting the FiLM modulation provides representational benefits independent of slot specialization.}}{8}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:training_comparison}{{4}{8}{Training performance comparison between \method {} and the GRU-only baseline. \textbf {Left}: Learning curves over 100k training steps (3 seeds each, smoothed). \method {} successfully learns to solve the task while the baseline fails entirely. \textbf {Right}: Final performance (mean of last 50 episodes). The abstraction bank architecture enables learning even when slot collapse occurs, suggesting the FiLM modulation provides representational benefits independent of slot specialization}{figure.caption.21}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Main experimental results across 33 trained models. Returns are mean $\pm $ std over 3 seeds where applicable. TTA Viable indicates whether the model has sufficient slot diversity for meaningful test-time adaptation.}}{8}{table.caption.22}\protected@file@percent }
+\newlabel{tab:main_results}{{5}{8}{Main experimental results across 33 trained models. Returns are mean $\pm $ std over 3 seeds where applicable. TTA Viable indicates whether the model has sufficient slot diversity for meaningful test-time adaptation}{table.caption.22}{}}
+\@writefile{toc}{\contentsline {paragraph}{Diverse Model.}{8}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Test-Time Adaptation Analysis}{8}{section.7}\protected@file@percent }
+\newlabel{sec:tta}{{7}{8}{Test-Time Adaptation Analysis}{section.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}TTA Experimental Setup}{8}{subsection.7.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Causal intervention results: clamping gating weights to specific slots during evaluation. For collapsed models, only the dominant slot achieves good performance. For diverse models, performance is more robust but no clear mode-slot mapping emerges.}}{9}{table.caption.26}\protected@file@percent }
+\newlabel{tab:interventions}{{6}{9}{Causal intervention results: clamping gating weights to specific slots during evaluation. For collapsed models, only the dominant slot achieves good performance. For diverse models, performance is more robust but no clear mode-slot mapping emerges}{table.caption.26}{}}
+\newlabel{fig:clamp}{{5a}{9}{Clamp experiment}{figure.caption.27}{}}
+\newlabel{sub@fig:clamp}{{a}{9}{Clamp experiment}{figure.caption.27}{}}
+\newlabel{fig:disable}{{5b}{9}{Disable experiment}{figure.caption.27}{}}
+\newlabel{sub@fig:disable}{{b}{9}{Disable experiment}{figure.caption.27}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Causal intervention experiments. (a) \textbf  {Clamp experiment}: Performance when forcing the agent to use only a single slot (clamping weights to one-hot). For collapsed models, only the dominant slot achieves good performance. (b) \textbf  {Disable experiment}: Performance when disabling individual slots (setting their weight to zero and renormalizing). Disabling the dominant slot causes catastrophic failure in collapsed models.}}{9}{figure.caption.27}\protected@file@percent }
+\newlabel{fig:interventions}{{5}{9}{Causal intervention experiments. (a) \textbf {Clamp experiment}: Performance when forcing the agent to use only a single slot (clamping weights to one-hot). For collapsed models, only the dominant slot achieves good performance. (b) \textbf {Disable experiment}: Performance when disabling individual slots (setting their weight to zero and renormalizing). Disabling the dominant slot causes catastrophic failure in collapsed models}{figure.caption.27}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Results}{9}{subsection.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Key Findings}{9}{subsection.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Finding 1: TTA Does Not Improve Performance.}{9}{section*.32}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Test-time adaptation results. ``Before'' and ``After'' show mean returns over 20 evaluation episodes before and after 30 adaptation episodes. TTA does not improve performance in any configuration tested.}}{10}{table.caption.30}\protected@file@percent }
+\newlabel{tab:tta}{{7}{10}{Test-time adaptation results. ``Before'' and ``After'' show mean returns over 20 evaluation episodes before and after 30 adaptation episodes. TTA does not improve performance in any configuration tested}{table.caption.30}{}}
+\@writefile{toc}{\contentsline {paragraph}{Finding 2: Policy-Head TTA Causes Catastrophic Forgetting.}{10}{section*.33}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Finding 3: Root Cause is Slot Collapse.}{10}{section*.34}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Gating weight evolution during test-time adaptation on suboptimal model (interp\_all). Weights fluctuate but do not converge to a stable configuration, indicating slots do not encode meaningful mode-specific information.}}{10}{table.caption.35}\protected@file@percent }
+\newlabel{tab:tta_weights}{{8}{10}{Gating weight evolution during test-time adaptation on suboptimal model (interp\_all). Weights fluctuate but do not converge to a stable configuration, indicating slots do not encode meaningful mode-specific information}{table.caption.35}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Slot Dropout: A Path Forward}{10}{subsection.7.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Key Result.}{10}{section*.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Interpretation.}{10}{section*.38}\protected@file@percent }
+\newlabel{fig:tta_gating}{{6a}{11}{ASTRAL + Gating TTA}{figure.caption.31}{}}
+\newlabel{sub@fig:tta_gating}{{a}{11}{ASTRAL + Gating TTA}{figure.caption.31}{}}
+\newlabel{fig:tta_baseline}{{6b}{11}{Baseline + Policy TTA}{figure.caption.31}{}}
+\newlabel{sub@fig:tta_baseline}{{b}{11}{Baseline + Policy TTA}{figure.caption.31}{}}
+\newlabel{fig:tta_policy}{{6c}{11}{ASTRAL + Policy TTA (Ablation)}{figure.caption.31}{}}
+\newlabel{sub@fig:tta_policy}{{c}{11}{ASTRAL + Policy TTA (Ablation)}{figure.caption.31}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Test-time adaptation comparison. Each plot shows: (left) before vs. after TTA performance, (middle) adaptation curve during 30 episodes, (right) improvement per mode. (a) ASTRAL with gating-only TTA maintains near-optimal performance. (b) Baseline with policy-head TTA shows minimal change due to poor initial performance. (c) ASTRAL with policy-head TTA causes catastrophic forgetting on 2/3 modes, demonstrating the importance of the gating mechanism.}}{11}{figure.caption.31}\protected@file@percent }
+\newlabel{fig:tta_comparison}{{6}{11}{Test-time adaptation comparison. Each plot shows: (left) before vs. after TTA performance, (middle) adaptation curve during 30 episodes, (right) improvement per mode. (a) ASTRAL with gating-only TTA maintains near-optimal performance. (b) Baseline with policy-head TTA shows minimal change due to poor initial performance. (c) ASTRAL with policy-head TTA causes catastrophic forgetting on 2/3 modes, demonstrating the importance of the gating mechanism}{figure.caption.31}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Discussion}{11}{section.8}\protected@file@percent }
+\newlabel{sec:discussion}{{8}{11}{Discussion}{section.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Why Does Slot Collapse Occur?}{11}{subsection.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reward Sparsity.}{11}{section*.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Optimization Landscape.}{11}{section*.40}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Insufficient Mode Diversity.}{11}{section*.41}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Implications for Interpretable RL}{11}{subsection.8.2}\protected@file@percent }
+\bibstyle{plainnat}
+\bibdata{references}
+\bibcite{bastani2018verifiable}{{1}{2018}{{Bastani et~al.}}{{Bastani, Pu, and Solar-Lezama}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Test-time adaptation comparison across model types. \textbf  {Left}: Performance before and after TTA. \textbf  {Right}: TTA improvement (positive = better after adaptation). Key finding: \textbf  {slot dropout (0.3)} is the only configuration that benefits from TTA (+11.4 improvement), while regularization-based diversity (diverse\_strong) causes catastrophic degradation (-64.6). This suggests that slot dropout creates \emph  {adaptable} abstractions, while other diversity techniques create diversity without adaptability.}}{12}{figure.caption.36}\protected@file@percent }
+\newlabel{fig:tta_final}{{7}{12}{Test-time adaptation comparison across model types. \textbf {Left}: Performance before and after TTA. \textbf {Right}: TTA improvement (positive = better after adaptation). Key finding: \textbf {slot dropout (0.3)} is the only configuration that benefits from TTA (+11.4 improvement), while regularization-based diversity (diverse\_strong) causes catastrophic degradation (-64.6). This suggests that slot dropout creates \emph {adaptable} abstractions, while other diversity techniques create diversity without adaptability}{figure.caption.36}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Limitations}{12}{subsection.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{12}{section.9}\protected@file@percent }
+\newlabel{sec:conclusion}{{9}{12}{Conclusion}{section.9}{}}
+\bibcite{brockman2016gym}{{2}{2016}{{Brockman et~al.}}{{Brockman, Cheung, Pettersson, Schneider, Schulman, Tang, and Zaremba}}}
+\bibcite{choi2000hidden}{{3}{2000}{{Choi et~al.}}{{Choi, Yeung, and Zhang}}}
+\bibcite{da2006dealing}{{4}{2006}{{Da~Silva et~al.}}{{Da~Silva, Basso, Bazzan, and Engel}}}
+\bibcite{duan2016rl2}{{5}{2016}{{Duan et~al.}}{{Duan, Schulman, Chen, Bartlett, Sutskever, and Abbeel}}}
+\bibcite{finn2017maml}{{6}{2017}{{Finn et~al.}}{{Finn, Abbeel, and Levine}}}
+\bibcite{hallak2015contextual}{{7}{2015}{{Hallak et~al.}}{{Hallak, Di~Castro, and Mannor}}}
+\bibcite{jacobs1991adaptive}{{8}{1991}{{Jacobs et~al.}}{{Jacobs, Jordan, Nowlan, and Hinton}}}
+\bibcite{kim2018interpretability}{{9}{2018}{{Kim et~al.}}{{Kim, Wattenberg, Gilmer, Cai, Wexler, Viegas, et~al.}}}
+\bibcite{mott2019towards}{{10}{2019}{{Mott et~al.}}{{Mott, Zoran, Chrzanowski, Wierstra, and Rezende}}}
+\bibcite{nichol2018firstorder}{{11}{2018}{{Nichol et~al.}}{{Nichol, Achiam, and Schulman}}}
+\bibcite{padakandla2020survey}{{12}{2020}{{Padakandla}}{{}}}
+\bibcite{perez2018film}{{13}{2018}{{Perez et~al.}}{{Perez, Strub, De~Vries, Dumoulin, and Courville}}}
+\bibcite{ren2021probabilistic}{{14}{2021}{{Ren et~al.}}{{Ren, Li, Ding, and Arumugam}}}
+\bibcite{schulman2017proximal}{{15}{2017}{{Schulman et~al.}}{{Schulman, Wolski, Dhariwal, Radford, and Klimov}}}
+\bibcite{shazeer2017outrageously}{{16}{2017}{{Shazeer et~al.}}{{Shazeer, Mirhoseini, Maziarz, Davis, Le, Hinton, and Dean}}}
+\bibcite{tobin2017domain}{{17}{2017}{{Tobin et~al.}}{{Tobin, Fong, Ray, Schneider, Zaremba, and Abbeel}}}
+\bibcite{verma2018programmatically}{{18}{2018}{{Verma et~al.}}{{Verma, Murali, Singh, Kohli, and Chaudhuri}}}
+\bibcite{wang2016learning}{{19}{2016}{{Wang et~al.}}{{Wang, Kurth-Nelson, Tirumala, Soyer, Leibo, Munos, Blundell, Kumaran, and Botvinick}}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Additional Experimental Details}{14}{appendix.A}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Complete Model Inventory}{14}{subsection.A.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Complete inventory of all 33 trained models with configurations and results.}}{14}{table.caption.43}\protected@file@percent }
+\newlabel{tab:all_models}{{9}{14}{Complete inventory of all 33 trained models with configurations and results}{table.caption.43}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Computational Resources}{14}{subsection.A.2}\protected@file@percent }
+\gdef \@abspage@last{14}

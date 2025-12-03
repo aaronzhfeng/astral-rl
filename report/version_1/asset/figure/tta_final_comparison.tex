@@ -1,0 +1,9 @@
+% Figure: TTA Final Comparison - Slot Dropout vs Other Methods
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\textwidth]{asset/figure/tta_final_comparison.png}
+    \caption{Test-time adaptation comparison across model types. \textbf{Left}: Performance before and after TTA. \textbf{Right}: TTA improvement (positive = better after adaptation). Key finding: \textbf{slot dropout (0.3)} is the only configuration that benefits from TTA (+11.4 improvement), while regularization-based diversity (diverse\_strong) causes catastrophic degradation (-64.6). This suggests that slot dropout creates \emph{adaptable} abstractions, while other diversity techniques create diversity without adaptability.}
+    \label{fig:tta_final}
+\end{figure}
+
+

@@ -1,0 +1,24 @@
+% Table: Causal intervention results
+\begin{table}[h]
+    \caption{Causal intervention results: clamping gating weights to specific slots during evaluation. For collapsed models, only the dominant slot achieves good performance. For diverse models, performance is more robust but no clear mode-slot mapping emerges.}
+    \label{tab:interventions}
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        & \multicolumn{3}{c}{Return when Clamped to Slot} & \\
+        \cmidrule(lr){2-4}
+        Mode & Slot 0 & Slot 1 & Slot 2 & Natural \\
+        \midrule
+        \multicolumn{5}{l}{\textit{Collapsed Model (Default ASTRAL, seed 42)}} \\
+        Mode 0 (Light) & 45.2 & \textbf{420.5} & 38.7 & 425.3 \\
+        Mode 1 (Standard) & 52.1 & \textbf{438.2} & 41.3 & 441.7 \\
+        Mode 2 (Heavy) & 38.4 & \textbf{395.8} & 35.2 & 398.2 \\
+        \midrule
+        \multicolumn{5}{l}{\textit{Diverse Model (Best Config Strong, seed 42)}} \\
+        Mode 0 (Light) & \textbf{285.4} & 198.3 & 142.7 & 312.5 \\
+        Mode 1 (Standard) & 245.2 & \textbf{267.8} & 156.4 & 295.3 \\
+        Mode 2 (Heavy) & 198.7 & \textbf{215.4} & 189.2 & 278.6 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+

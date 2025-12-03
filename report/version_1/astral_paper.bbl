@@ -1,0 +1,141 @@
+\begin{thebibliography}{19}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bastani et~al.(2018)Bastani, Pu, and
+  Solar-Lezama]{bastani2018verifiable}
+Osbert Bastani, Yewen Pu, and Armando Solar-Lezama.
+\newblock Verifiable reinforcement learning via policy extraction.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~31, 2018.
+
+\bibitem[Brockman et~al.(2016)Brockman, Cheung, Pettersson, Schneider,
+  Schulman, Tang, and Zaremba]{brockman2016gym}
+Greg Brockman, Vicki Cheung, Ludwig Pettersson, Jonas Schneider, John Schulman,
+  Jie Tang, and Wojciech Zaremba.
+\newblock Openai gym.
+\newblock \emph{arXiv preprint arXiv:1606.01540}, 2016.
+
+\bibitem[Choi et~al.(2000)Choi, Yeung, and Zhang]{choi2000hidden}
+Samuel~PM Choi, Dit-Yan Yeung, and Nevin~L Zhang.
+\newblock Hidden-mode markov decision processes for nonstationary sequential
+  decision making.
+\newblock In \emph{Sequence Learning}, pages 264--287. Springer, 2000.
+
+\bibitem[Da~Silva et~al.(2006)Da~Silva, Basso, Bazzan, and
+  Engel]{da2006dealing}
+Bruno~C Da~Silva, Eduardo~W Basso, Ana~LC Bazzan, and Paulo~M Engel.
+\newblock Dealing with non-stationary environments using context detection.
+\newblock In \emph{Proceedings of the 23rd International Conference on Machine
+  Learning}, pages 217--224, 2006.
+
+\bibitem[Duan et~al.(2016)Duan, Schulman, Chen, Bartlett, Sutskever, and
+  Abbeel]{duan2016rl2}
+Yan Duan, John Schulman, Xi~Chen, Peter~L Bartlett, Ilya Sutskever, and Pieter
+  Abbeel.
+\newblock Rl$^2$: Fast reinforcement learning via slow reinforcement learning.
+\newblock \emph{arXiv preprint arXiv:1611.02779}, 2016.
+
+\bibitem[Finn et~al.(2017)Finn, Abbeel, and Levine]{finn2017maml}
+Chelsea Finn, Pieter Abbeel, and Sergey Levine.
+\newblock Model-agnostic meta-learning for fast adaptation of deep networks.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  1126--1135. PMLR, 2017.
+
+\bibitem[Hallak et~al.(2015)Hallak, Di~Castro, and
+  Mannor]{hallak2015contextual}
+Assaf Hallak, Dotan Di~Castro, and Shie Mannor.
+\newblock Contextual markov decision processes.
+\newblock \emph{arXiv preprint arXiv:1502.02259}, 2015.
+
+\bibitem[Jacobs et~al.(1991)Jacobs, Jordan, Nowlan, and
+  Hinton]{jacobs1991adaptive}
+Robert~A Jacobs, Michael~I Jordan, Steven~J Nowlan, and Geoffrey~E Hinton.
+\newblock Adaptive mixtures of local experts.
+\newblock \emph{Neural Computation}, 3\penalty0 (1):\penalty0 79--87, 1991.
+
+\bibitem[Kim et~al.(2018)Kim, Wattenberg, Gilmer, Cai, Wexler, Viegas,
+  et~al.]{kim2018interpretability}
+Been Kim, Martin Wattenberg, Justin Gilmer, Carrie Cai, James Wexler, Fernanda
+  Viegas, et~al.
+\newblock Interpretability beyond feature attribution: Quantitative testing
+  with concept activation vectors (tcav).
+\newblock In \emph{International Conference on Machine Learning}, pages
+  2668--2677. PMLR, 2018.
+
+\bibitem[Mott et~al.(2019)Mott, Zoran, Chrzanowski, Wierstra, and
+  Rezende]{mott2019towards}
+Alexander Mott, Daniel Zoran, Mike Chrzanowski, Daan Wierstra, and Danilo~J
+  Rezende.
+\newblock Towards interpretable reinforcement learning using attention
+  augmented agents.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~32, 2019.
+
+\bibitem[Nichol et~al.(2018)Nichol, Achiam, and Schulman]{nichol2018firstorder}
+Alex Nichol, Joshua Achiam, and John Schulman.
+\newblock On first-order meta-learning algorithms.
+\newblock \emph{arXiv preprint arXiv:1803.02999}, 2018.
+
+\bibitem[Padakandla(2020)]{padakandla2020survey}
+Sindhu Padakandla.
+\newblock A survey of reinforcement learning algorithms for dynamically varying
+  environments.
+\newblock \emph{ACM Computing Surveys}, 54\penalty0 (6):\penalty0 1--25, 2020.
+
+\bibitem[Perez et~al.(2018)Perez, Strub, De~Vries, Dumoulin, and
+  Courville]{perez2018film}
+Ethan Perez, Florian Strub, Harm De~Vries, Vincent Dumoulin, and Aaron
+  Courville.
+\newblock Film: Visual reasoning with a general conditioning layer.
+\newblock In \emph{Proceedings of the AAAI Conference on Artificial
+  Intelligence}, volume~32, 2018.
+
+\bibitem[Ren et~al.(2021)Ren, Li, Ding, and Arumugam]{ren2021probabilistic}
+Jie Ren, Pengfei Li, Kai Ding, and Deva Arumugam.
+\newblock Probabilistic mixture-of-experts for efficient deep reinforcement
+  learning.
+\newblock \emph{arXiv preprint arXiv:2104.09122}, 2021.
+
+\bibitem[Schulman et~al.(2017)Schulman, Wolski, Dhariwal, Radford, and
+  Klimov]{schulman2017proximal}
+John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov.
+\newblock Proximal policy optimization algorithms.
+\newblock \emph{arXiv preprint arXiv:1707.06347}, 2017.
+
+\bibitem[Shazeer et~al.(2017)Shazeer, Mirhoseini, Maziarz, Davis, Le, Hinton,
+  and Dean]{shazeer2017outrageously}
+Noam Shazeer, Azalia Mirhoseini, Krzysztof Maziarz, Andy Davis, Quoc Le,
+  Geoffrey Hinton, and Jeff Dean.
+\newblock Outrageously large neural networks: The sparsely-gated
+  mixture-of-experts layer.
+\newblock In \emph{International Conference on Learning Representations}, 2017.
+
+\bibitem[Tobin et~al.(2017)Tobin, Fong, Ray, Schneider, Zaremba, and
+  Abbeel]{tobin2017domain}
+Josh Tobin, Rachel Fong, Alex Ray, Jonas Schneider, Wojciech Zaremba, and
+  Pieter Abbeel.
+\newblock Domain randomization for transferring deep neural networks from
+  simulation to the real world.
+\newblock In \emph{IEEE/RSJ International Conference on Intelligent Robots and
+  Systems}, pages 23--30. IEEE, 2017.
+
+\bibitem[Verma et~al.(2018)Verma, Murali, Singh, Kohli, and
+  Chaudhuri]{verma2018programmatically}
+Abhinav Verma, Vijayaraghavan Murali, Rishabh Singh, Pushmeet Kohli, and Swarat
+  Chaudhuri.
+\newblock Programmatically interpretable reinforcement learning.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  5045--5054. PMLR, 2018.
+
+\bibitem[Wang et~al.(2016)Wang, Kurth-Nelson, Tirumala, Soyer, Leibo, Munos,
+  Blundell, Kumaran, and Botvinick]{wang2016learning}
+Jane~X Wang, Zeb Kurth-Nelson, Dhruva Tirumala, Hubert Soyer, Joel~Z Leibo,
+  Remi Munos, Charles Blundell, Dharshan Kumaran, and Matt Botvinick.
+\newblock Learning to reinforcement learn.
+\newblock \emph{arXiv preprint arXiv:1611.05763}, 2016.
+
+\end{thebibliography}

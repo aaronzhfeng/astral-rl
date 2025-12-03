@@ -1,0 +1,18 @@
+\begin{table}[h]
+\centering
+\caption{When to Use Each Adaptation Strategy}
+\label{tab:when_to_use}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Scenario} & \textbf{Best Method} & \textbf{Reason} \\
+\midrule
+Multi-mode deployment & \textbf{Gating} & Prevents forgetting \\
+Unknown episode budget & \textbf{Gating} & Consistent performance \\
+Risk-averse setting & \textbf{Gating} & No catastrophic failures \\
+\midrule
+Single-mode optimization & Full Fine-Tune & Maximum improvement \\
+Exactly 5 episodes & Policy Head & Peak performance \\
+\bottomrule
+\end{tabular}
+\end{table}
+
