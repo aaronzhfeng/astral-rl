@@ -1,5 +1,43 @@
 % references.bib - Bibliography for ASTRAL paper
 
+@article{stable-baselines3,
+  author  = {Antonin Raffin and Ashley Hill and Adam Gleave and Anssi Kanervisto and Maximilian Ernestus and Noah Dormann},
+  title   = {Stable-Baselines3: Reliable Reinforcement Learning Implementations},
+  journal = {Journal of Machine Learning Research},
+  year    = {2021},
+  volume  = {22},
+  number  = {268},
+  pages   = {1--8}
+}
+
+@article{mccloskey1989catastrophic,
+  title={Catastrophic interference in connectionist networks: The sequential learning problem},
+  author={McCloskey, Michael and Cohen, Neal J},
+  journal={Psychology of Learning and Motivation},
+  volume={24},
+  pages={109--165},
+  year={1989},
+  publisher={Elsevier}
+}
+
+@article{kirkpatrick2017overcoming,
+  title={Overcoming catastrophic forgetting in neural networks},
+  author={Kirkpatrick, James and Pascanu, Razvan and Rabinowitz, Neil and Veness, Joel and Desjardins, Guillaume and Rusu, Andrei A and Milan, Kieran and Quan, John and Ramalho, Tiago and Grabska-Barwinska, Agnieszka and others},
+  journal={Proceedings of the National Academy of Sciences},
+  volume={114},
+  number={13},
+  pages={3521--3526},
+  year={2017},
+  publisher={National Academy of Sciences}
+}
+
+@inproceedings{rusu2016progressive,
+  title={Progressive neural networks},
+  author={Rusu, Andrei A and Rabinowitz, Neil C and Desjardins, Guillaume and Soyer, Hubert and Kirkpatrick, James and Kavukcuoglu, Koray and Pascanu, Razvan and Hadsell, Raia},
+  booktitle={arXiv preprint arXiv:1606.04671},
+  year={2016}
+}
+
 @inproceedings{bastani2018verifiable,
   title={Verifiable reinforcement learning via policy extraction},
   author={Bastani, Osbert and Pu, Yewen and Solar-Lezama, Armando},
@@ -149,10 +187,324 @@
   organization={PMLR}
 }
 
+% Ensure this is properly formatted
+@misc{verma2018interpretable,
+  title={Programmatically Interpretable Reinforcement Learning},
+  author={Abhinav Verma and Vijayaraghavan Murali and Rishabh Singh and Pushmeet Kohli and Swarat Chaudhuri},
+  year={2018},
+  eprint={1804.02477},
+  archivePrefix={arXiv}
+}
+
 @article{wang2016learning,
   title={Learning to reinforcement learn},
   author={Wang, Jane X and Kurth-Nelson, Zeb and Tirumala, Dhruva and Soyer, Hubert and Leibo, Joel Z and Munos, Remi and Blundell, Charles and Kumaran, Dharshan and Botvinick, Matt},
   journal={arXiv preprint arXiv:1611.05763},
   year={2016}
+}
+
+% ============ NEW CITATIONS FOR EXPANDED RELATED WORK ============
+
+% Abstraction and State Representation
+@inproceedings{li2006towards,
+  title={Towards a unified theory of state abstraction for MDPs},
+  author={Li, Lihong and Walsh, Thomas J and Littman, Michael L},
+  booktitle={International Symposium on Artificial Intelligence and Mathematics},
+  year={2006}
+}
+
+@inproceedings{ferns2004metrics,
+  title={Metrics for finite Markov decision processes},
+  author={Ferns, Norm and Panangaden, Prakash and Precup, Doina},
+  booktitle={Proceedings of the 20th Conference on Uncertainty in Artificial Intelligence},
+  pages={162--169},
+  year={2004}
+}
+
+@inproceedings{castro2010using,
+  title={Using bisimulation for policy transfer in MDPs},
+  author={Castro, Pablo Samuel and Precup, Doina},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={24},
+  number={1},
+  year={2010}
+}
+
+@inproceedings{gelada2019deepmdp,
+  title={DeepMDP: Learning continuous latent space models for representation learning},
+  author={Gelada, Carles and Kumar, Saurabh and Buckman, Jacob and Nachum, Ofir and Bellemare, Marc G},
+  booktitle={International Conference on Machine Learning},
+  pages={2170--2179},
+  year={2019},
+  organization={PMLR}
+}
+
+@inproceedings{laskin2020curl,
+  title={CURL: Contrastive unsupervised representations for reinforcement learning},
+  author={Laskin, Michael and Srinivas, Aravind and Abbeel, Pieter},
+  booktitle={International Conference on Machine Learning},
+  pages={5639--5650},
+  year={2020},
+  organization={PMLR}
+}
+
+% Slot-based and Object-centric
+@inproceedings{locatello2020object,
+  title={Object-centric learning with slot attention},
+  author={Locatello, Francesco and Weissenborn, Dirk and Unterthiner, Thomas and Mahendran, Aravindh and Heigold, Georg and Uszkoreit, Jakob and Dosovitskiy, Alexey and Kipf, Thomas},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={33},
+  pages={11525--11538},
+  year={2020}
+}
+
+@inproceedings{veerapaneni2020entity,
+  title={Entity abstraction in visual model-based reinforcement learning},
+  author={Veerapaneni, Rishi and Co-Reyes, John D and Chang, Michael and Janner, Michael and Finn, Chelsea and Wu, Jiajun and Tenenbaum, Joshua and Levine, Sergey},
+  booktitle={Conference on Robot Learning},
+  pages={1439--1456},
+  year={2020},
+  organization={PMLR}
+}
+
+% Catastrophic Forgetting - additional
+@article{french1999catastrophic,
+  title={Catastrophic forgetting in connectionist networks},
+  author={French, Robert M},
+  journal={Trends in Cognitive Sciences},
+  volume={3},
+  number={4},
+  pages={128--135},
+  year={1999},
+  publisher={Elsevier}
+}
+
+@article{parisi2019continual,
+  title={Continual lifelong learning with neural networks: A review},
+  author={Parisi, German I and Kemker, Ronald and Part, Jose L and Kanan, Christopher and Wermter, Stefan},
+  journal={Neural Networks},
+  volume={113},
+  pages={54--71},
+  year={2019},
+  publisher={Elsevier}
+}
+
+@inproceedings{zenke2017continual,
+  title={Continual learning through synaptic intelligence},
+  author={Zenke, Friedemann and Poole, Ben and Ganguli, Surya},
+  booktitle={International Conference on Machine Learning},
+  pages={3987--3995},
+  year={2017},
+  organization={PMLR}
+}
+
+@inproceedings{aljundi2018memory,
+  title={Memory aware synapses: Learning what (not) to forget},
+  author={Aljundi, Rahaf and Babiloni, Francesca and Elhoseiny, Mohamed and Rohrbach, Marcus and Tuytelaars, Tinne},
+  booktitle={Proceedings of the European Conference on Computer Vision},
+  pages={139--154},
+  year={2018}
+}
+
+@inproceedings{rolnick2019experience,
+  title={Experience replay for continual learning},
+  author={Rolnick, David and Ahuja, Arun and Schwarz, Jonathan and Lillicrap, Timothy and Wayne, Gregory},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={32},
+  year={2019}
+}
+
+@inproceedings{shin2017continual,
+  title={Continual learning with deep generative replay},
+  author={Shin, Hanul and Lee, Jung Kwon and Kim, Jaehong and Kim, Jiwon},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={30},
+  year={2017}
+}
+
+@inproceedings{mallya2018packnet,
+  title={PackNet: Adding multiple tasks to a single network by iterative pruning},
+  author={Mallya, Arun and Lazebnik, Svetlana},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  pages={7765--7773},
+  year={2018}
+}
+
+@inproceedings{andreas2016neural,
+  title={Neural module networks},
+  author={Andreas, Jacob and Rohrbach, Marcus and Darrell, Trevor and Klein, Dan},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  pages={39--48},
+  year={2016}
+}
+
+% Test-Time Adaptation
+@inproceedings{wang2021tent,
+  title={Tent: Fully test-time adaptation by entropy minimization},
+  author={Wang, Dequan and Shelhamer, Evan and Liu, Shaoteng and Olshausen, Bruno and Darrell, Trevor},
+  booktitle={International Conference on Learning Representations},
+  year={2021}
+}
+
+@inproceedings{zhang2022memo,
+  title={MEMO: Test time robustness via adaptation and augmentation},
+  author={Zhang, Marvin and Levine, Sergey and Finn, Chelsea},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={35},
+  pages={38629--38642},
+  year={2022}
+}
+
+@inproceedings{sun2020test,
+  title={Test-time training with self-supervision for generalization under distribution shift},
+  author={Sun, Yu and Wang, Xiaolong and Liu, Zhuang and Miller, John and Efros, Alexei and Hardt, Moritz},
+  booktitle={International Conference on Machine Learning},
+  pages={9229--9248},
+  year={2020},
+  organization={PMLR}
+}
+
+% Non-stationary RL - additional
+@inproceedings{xie2020deep,
+  title={Deep reinforcement learning amidst lifelong non-stationarity},
+  author={Xie, Annie and Harrison, James and Finn, Chelsea},
+  booktitle={International Conference on Machine Learning},
+  year={2020}
+}
+
+@inproceedings{zintgraf2020varibad,
+  title={VariBAD: A very good method for Bayes-adaptive deep RL via meta-learning},
+  author={Zintgraf, Luisa and Shiarlis, Kyriacos and Igl, Maximilian and Schulze, Sebastian and Gal, Yarin and Hofmann, Katja and Whiteson, Shimon},
+  booktitle={International Conference on Learning Representations},
+  year={2020}
+}
+
+% Adaptive RL
+@inproceedings{kumar2021rma,
+  title={RMA: Rapid motor adaptation for legged robots},
+  author={Kumar, Ashish and Fu, Zipeng and Pathak, Deepak and Malik, Jitendra},
+  booktitle={Robotics: Science and Systems},
+  year={2021}
+}
+
+@inproceedings{lee2020context,
+  title={Context-aware dynamics model for generalization in model-based reinforcement learning},
+  author={Lee, Kimin and Seo, Younggyo and Lee, Seunghyun and Lee, Honglak and Shin, Jinwoo},
+  booktitle={International Conference on Machine Learning},
+  pages={5757--5766},
+  year={2020},
+  organization={PMLR}
+}
+
+% Meta-RL
+@inproceedings{rothfuss2019promp,
+  title={ProMP: Proximal meta-policy search},
+  author={Rothfuss, Jonas and Lee, Dennis and Clavera, Ignasi and Asfour, Tamim and Abbeel, Pieter},
+  booktitle={International Conference on Learning Representations},
+  year={2019}
+}
+
+@inproceedings{rakelly2019efficient,
+  title={Efficient off-policy meta-reinforcement learning via probabilistic context variables},
+  author={Rakelly, Kate and Zhou, Aurick and Finn, Chelsea and Levine, Sergey and Quillen, Deirdre},
+  booktitle={International Conference on Machine Learning},
+  pages={5331--5340},
+  year={2019},
+  organization={PMLR}
+}
+
+@inproceedings{mishra2018simple,
+  title={A simple neural attentive meta-learner},
+  author={Mishra, Nikhil and Rohaninejad, Mostafa and Chen, Xi and Abbeel, Pieter},
+  booktitle={International Conference on Learning Representations},
+  year={2018}
+}
+
+% MoE in RL
+@inproceedings{goyal2019reinforcement,
+  title={Reinforcement learning with competitive ensembles of information-constrained primitives},
+  author={Goyal, Anirudh and Islam, Riashat and Strouse, DJ and Ahmed, Zafarali and Botvinick, Matthew and Larochelle, Hugo and Bengio, Yoshua and Levine, Sergey},
+  booktitle={International Conference on Learning Representations},
+  year={2019}
+}
+
+% Attention
+@inproceedings{bahdanau2015neural,
+  title={Neural machine translation by jointly learning to align and translate},
+  author={Bahdanau, Dzmitry and Cho, Kyunghyun and Bengio, Yoshua},
+  booktitle={International Conference on Learning Representations},
+  year={2015}
+}
+
+@inproceedings{vaswani2017attention,
+  title={Attention is all you need},
+  author={Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and Kaiser, {\L}ukasz and Polosukhin, Illia},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={30},
+  year={2017}
+}
+
+% FiLM applications in RL
+@inproceedings{barreto2020fast,
+  title={Fast reinforcement learning with generalized policy updates},
+  author={Barreto, Andr{\'e} and Borsa, Diana and Hou, Shaobo and Comanici, Gheorghe and Aygün, Eser and Hamel, Philippe and Toyama, Daniel and Mourad, Shibl and Silver, David and Precup, Doina},
+  booktitle={Proceedings of the National Academy of Sciences},
+  volume={117},
+  number={48},
+  pages={30079--30087},
+  year={2020}
+}
+
+@inproceedings{sodhani2021multi,
+  title={Multi-task reinforcement learning with context-based representations},
+  author={Sodhani, Shagun and Zhang, Amy and Pineau, Joelle},
+  booktitle={International Conference on Machine Learning},
+  pages={9767--9779},
+  year={2021},
+  organization={PMLR}
+}
+
+@inproceedings{peng2019mcp,
+  title={MCP: Learning composable hierarchical control with multiplicative compositional policies},
+  author={Peng, Xue Bin and Chang, Michael and Zhang, Grace and Abbeel, Pieter and Levine, Sergey},
+  booktitle={Advances in Neural Information Processing Systems},
+  volume={32},
+  year={2019}
+}
+
+% Dropout variants
+@article{srivastava2014dropout,
+  title={Dropout: A simple way to prevent neural networks from overfitting},
+  author={Srivastava, Nitish and Hinton, Geoffrey and Krizhevsky, Alex and Sutskever, Ilya and Salakhutdinov, Ruslan},
+  journal={Journal of Machine Learning Research},
+  volume={15},
+  number={1},
+  pages={1929--1958},
+  year={2014}
+}
+
+@inproceedings{wan2013regularization,
+  title={Regularization of neural networks using DropConnect},
+  author={Wan, Li and Zeiler, Matthew and Zhang, Sixin and Le Cun, Yann and Fergus, Rob},
+  booktitle={International Conference on Machine Learning},
+  pages={1058--1066},
+  year={2013},
+  organization={PMLR}
+}
+
+@inproceedings{tompson2015efficient,
+  title={Efficient object localization using convolutional networks},
+  author={Tompson, Jonathan and Goroshin, Ross and Jain, Arjun and LeCun, Yann and Bregler, Christoph},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  pages={648--656},
+  year={2015}
+}
+
+@inproceedings{zhou2020scheduled,
+  title={Scheduled DropHead: A regularization method for transformer models},
+  author={Zhou, Wangchunshu and Ge, Tao and Xu, Ke and Wei, Furu and Zhou, Ming},
+  booktitle={Findings of the Association for Computational Linguistics: EMNLP},
+  pages={1971--1980},
+  year={2020}
 }
 
