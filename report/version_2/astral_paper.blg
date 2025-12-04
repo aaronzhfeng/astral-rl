@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: astral_paper.aux
+The style file: unsrtnat.bst
+Database file #1: references.bib
+Warning--can't use both volume and number fields in castro2010using
+Warning--can't use both volume and number fields in perez2018film
+Warning--can't use both volume and number fields in barreto2020fast
+You've used 55 entries,
+            2481 wiz_defined-function locations,
+            814 strings with 15039 characters,
+and the built_in function-call counts, 27160 in all, are:
+= -- 2119
+> -- 1763
+< -- 37
++ -- 644
+- -- 534
+* -- 2134
+:= -- 4189
+add.period$ -- 178
+call.type$ -- 55
+change.case$ -- 110
+chr.to.int$ -- 55
+cite$ -- 58
+duplicate$ -- 1400
+empty$ -- 2362
+format.name$ -- 595
+if$ -- 5917
+int.to.chr$ -- 1
+int.to.str$ -- 56
+missing$ -- 55
+newline$ -- 283
+num.names$ -- 165
+pop$ -- 604
+preamble$ -- 1
+purify$ -- 55
+quote$ -- 0
+skip$ -- 892
+stack$ -- 0
+substring$ -- 1161
+swap$ -- 402
+text.length$ -- 32
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 385
+warning$ -- 3
+while$ -- 195
+width$ -- 0
+write$ -- 720
+(There were 3 warnings)

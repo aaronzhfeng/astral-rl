@@ -1,0 +1,274 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{padakandla2020survey,xie2020deep}
+\citation{tobin2017domain,kumar2021rma}
+\citation{hallak2015contextual}
+\citation{tobin2017domain}
+\citation{finn2017maml,nichol2018firstorder,rakelly2019efficient}
+\citation{hallak2015contextual,lee2020context}
+\citation{mccloskey1989catastrophic,french1999catastrophic,kirkpatrick2017overcoming}
+\citation{parisi2019continual}
+\citation{rolnick2019experience}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
+\citation{padakandla2020survey}
+\citation{choi2000hidden}
+\citation{da2006dealing}
+\citation{hallak2015contextual}
+\citation{xie2020deep}
+\citation{zintgraf2020varibad}
+\citation{li2006towards}
+\citation{ferns2004metrics,castro2010using}
+\citation{gelada2019deepmdp}
+\citation{laskin2020curl}
+\citation{locatello2020object}
+\citation{veerapaneni2020entity}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}\protected@file@percent }
+\newlabel{sec:related}{{2}{2}{Related Work}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Non-Stationary and Hidden-Mode MDPs}{2}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Abstraction and State Representation in RL}{2}{subsection.2.2}\protected@file@percent }
+\citation{mccloskey1989catastrophic,french1999catastrophic}
+\citation{parisi2019continual}
+\citation{kirkpatrick2017overcoming}
+\citation{zenke2017continual}
+\citation{aljundi2018memory}
+\citation{rolnick2019experience}
+\citation{shin2017continual}
+\citation{rusu2016progressive}
+\citation{mallya2018packnet}
+\citation{andreas2016neural}
+\citation{wang2021tent}
+\citation{zhang2022memo}
+\citation{sun2020test}
+\citation{finn2017maml}
+\citation{tobin2017domain}
+\citation{kumar2021rma}
+\citation{lee2020context}
+\citation{finn2017maml}
+\citation{nichol2018firstorder}
+\citation{duan2016rl2}
+\citation{wang2016learning,mishra2018simple}
+\citation{finn2017maml}
+\citation{rothfuss2019promp}
+\citation{rakelly2019efficient}
+\citation{jacobs1991adaptive}
+\citation{shazeer2017outrageously}
+\citation{ren2021probabilistic}
+\citation{goyal2019reinforcement}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Catastrophic Forgetting and Continual Learning}{3}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Regularization-based methods}{3}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Replay-based methods}{3}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Architecture-based methods}{3}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Test-Time Adaptation}{3}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Meta-Learning for Fast Adaptation}{3}{subsection.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Mixture of Experts and Gating Mechanisms}{3}{subsection.2.6}\protected@file@percent }
+\citation{bahdanau2015neural,vaswani2017attention}
+\citation{perez2018film}
+\citation{barreto2020fast}
+\citation{sodhani2021multi}
+\citation{peng2019mcp}
+\citation{srivastava2014dropout}
+\citation{wan2013regularization}
+\citation{tompson2015efficient}
+\citation{zhou2020scheduled}
+\citation{padakandla2020survey}
+\citation{choi2000hidden}
+\citation{parisi2019continual}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}Feature Modulation}{4}{subsection.2.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.8}Dropout and Stochastic Regularization}{4}{subsection.2.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Method}{4}{section.3}\protected@file@percent }
+\newlabel{sec:method}{{3}{4}{Method}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Problem Setting}{4}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Architecture Overview}{4}{subsection.3.2}\protected@file@percent }
+\citation{locatello2020object}
+\citation{bahdanau2015neural,vaswani2017attention}
+\citation{perez2018film}
+\citation{schulman2017proximal}
+\citation{shazeer2017outrageously}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {ASTRAL Architecture.} The agent processes observations through a GRU backbone. The Abstraction Bank maintains $K$ learnable slot vectors combined via a gating network. At test time, \textbf  {only the gating network} (green, $\sim $4.3k parameters) is adapted, while all other components remain frozen.}}{5}{figure.caption.5}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:architecture}{{1}{5}{\textbf {ASTRAL Architecture.} The agent processes observations through a GRU backbone. The Abstraction Bank maintains $K$ learnable slot vectors combined via a gating network. At test time, \textbf {only the gating network} (green, $\sim $4.3k parameters) is adapted, while all other components remain frozen}{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Abstraction Bank}{5}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}FiLM Modulation}{5}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Training Objective}{5}{subsection.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Weight Entropy ($\mathcal  {L}_{\text  {w-ent}}$).}{5}{section*.6}\protected@file@percent }
+\citation{srivastava2014dropout}
+\citation{zhou2020scheduled}
+\citation{schulman2017proximal}
+\citation{kirkpatrick2017overcoming,rusu2016progressive}
+\citation{zenke2017continual,aljundi2018memory}
+\citation{brockman2016gym}
+\@writefile{toc}{\contentsline {paragraph}{Load Balancing ($\mathcal  {L}_{\text  {lb}}$).}{6}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Contrastive ($\mathcal  {L}_{\text  {contrast}}$).}{6}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Slot Dropout.}{6}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Test-Time Adaptation}{6}{subsection.3.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experimental Setup}{6}{section.4}\protected@file@percent }
+\newlabel{sec:setup}{{4}{6}{Experimental Setup}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Environment: Non-Stationary CartPole}{6}{subsection.4.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Non-Stationary CartPole Environment Modes}}{6}{table.caption.10}\protected@file@percent }
+\newlabel{tab:env_modes}{{1}{6}{Non-Stationary CartPole Environment Modes}{table.caption.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Implementation Details}{6}{subsection.4.2}\protected@file@percent }
+\citation{stable-baselines3}
+\citation{shazeer2017outrageously}
+\citation{vaswani2017attention}
+\citation{bahdanau2015neural}
+\citation{shazeer2017outrageously}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Baselines}{7}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Adaptation Protocol}{7}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}The Slot Collapse Problem}{7}{section.5}\protected@file@percent }
+\newlabel{sec:collapse}{{5}{7}{The Slot Collapse Problem}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Phenomenon}{7}{subsection.5.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Slot Collapse Problem and Solution.} Left: Without slot dropout, weights collapse to a single slot (Slot 1 = 100\%). Right: With slot dropout ($p=0.3$), weights are distributed across all slots, enabling meaningful test-time adaptation.}}{7}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:slot_collapse}{{2}{7}{\textbf {Slot Collapse Problem and Solution.} Left: Without slot dropout, weights collapse to a single slot (Slot 1 = 100\%). Right: With slot dropout ($p=0.3$), weights are distributed across all slots, enabling meaningful test-time adaptation}{figure.caption.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Analysis}{7}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Policy Gradient Reinforcement.}{7}{section*.12}\protected@file@percent }
+\citation{locatello2020object}
+\@writefile{toc}{\contentsline {paragraph}{Soft Attention Convergence.}{8}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mode Similarity.}{8}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Slot Dropout as Solution}{8}{subsection.5.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Effect of Slot Dropout on TTA Performance. Only slot dropout achieves positive improvement.}}{8}{table.caption.15}\protected@file@percent }
+\newlabel{tab:slot_dropout}{{2}{8}{Effect of Slot Dropout on TTA Performance. Only slot dropout achieves positive improvement}{table.caption.15}{}}
+\@writefile{toc}{\contentsline {paragraph}{Slot Dropout ($p=0.3$): The sweet spot.}{8}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Slot Dropout ($p=0.5$): Over-regularization.}{8}{section*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Strong Regularization: Ceiling effect.}{8}{section*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Collapsed Default: No diversity to exploit.}{8}{section*.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Diverse (regularization only): Numerical but not functional diversity.}{8}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Key Insight.}{8}{section*.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Fair Comparison Experiments}{8}{section.6}\protected@file@percent }
+\newlabel{sec:fair_comparison}{{6}{8}{Fair Comparison Experiments}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Experiment A: Parameter-Matched Comparison}{9}{subsection.6.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Experiment A: Parameter-Matched Comparison. Gating avoids catastrophic drops.}}{9}{table.caption.22}\protected@file@percent }
+\newlabel{tab:exp_a}{{3}{9}{Experiment A: Parameter-Matched Comparison. Gating avoids catastrophic drops}{table.caption.22}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Experiment B: Catastrophic Forgetting Test}{9}{subsection.6.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Experiment B: Catastrophic Forgetting.} After adapting to Mode 0, gating preserves Mode 1 almost perfectly ($-0.2$) while full fine-tuning catastrophically forgets ($-143.5$). \textbf  {Total forgetting: Gating $-25.8$ vs Full $-250.1$ (10$\times $ less).}}}{10}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:forgetting}{{3}{10}{\textbf {Experiment B: Catastrophic Forgetting.} After adapting to Mode 0, gating preserves Mode 1 almost perfectly ($-0.2$) while full fine-tuning catastrophically forgets ($-143.5$). \textbf {Total forgetting: Gating $-25.8$ vs Full $-250.1$ (10$\times $ less).}}{figure.caption.23}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Experiment B: Catastrophic Forgetting (adapt Mode 0, evaluate all modes)}}{10}{table.caption.24}\protected@file@percent }
+\newlabel{tab:exp_b}{{4}{10}{Experiment B: Catastrophic Forgetting (adapt Mode 0, evaluate all modes)}{table.caption.24}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Experiment C: Few-Shot Adaptation Speed}{10}{subsection.6.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {Experiment C: Few-Shot Adaptation.} Gating (blue) shows consistent positive improvement for budgets 1-20, never catastrophically failing. Policy-head (orange) peaks at 5 episodes (+155.7) but collapses after 20 episodes ($-122.7$). Full fine-tuning (red) is highly unstable.}}{11}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:fewshot}{{4}{11}{\textbf {Experiment C: Few-Shot Adaptation.} Gating (blue) shows consistent positive improvement for budgets 1-20, never catastrophically failing. Policy-head (orange) peaks at 5 episodes (+155.7) but collapses after 20 episodes ($-122.7$). Full fine-tuning (red) is highly unstable}{figure.caption.25}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Experiment C: Few-Shot Adaptation (improvement vs baseline)}}{11}{table.caption.26}\protected@file@percent }
+\newlabel{tab:exp_c}{{5}{11}{Experiment C: Few-Shot Adaptation (improvement vs baseline)}{table.caption.26}{}}
+\@writefile{toc}{\contentsline {paragraph}{Gating (Blue): Consistent and Safe.}{11}{section*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Policy-Head (Orange): High Risk, High Reward.}{11}{section*.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Full Fine-Tuning (Red): Chaotic.}{11}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Experiment D: Extreme Mode Differences}{12}{subsection.6.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {Experiment D: Extreme Modes.} On harder mode differences, gating maintains positive average improvement ($+8.5$) while full fine-tuning shows catastrophic failure on Mode 1 ($-103.0$).}}{12}{figure.caption.30}\protected@file@percent }
+\newlabel{fig:extreme}{{5}{12}{\textbf {Experiment D: Extreme Modes.} On harder mode differences, gating maintains positive average improvement ($+8.5$) while full fine-tuning shows catastrophic failure on Mode 1 ($-103.0$)}{figure.caption.30}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Experiment D: Extreme Mode Differences (gravity 5--25, length 0.3--0.8)}}{12}{table.caption.31}\protected@file@percent }
+\newlabel{tab:exp_d}{{6}{12}{Experiment D: Extreme Mode Differences (gravity 5--25, length 0.3--0.8)}{table.caption.31}{}}
+\@writefile{toc}{\contentsline {paragraph}{Gating scales gracefully.}{12}{section*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Full fine-tuning's catastrophic failure amplifies.}{12}{section*.33}\protected@file@percent }
+\citation{rusu2016progressive}
+\citation{finn2017maml}
+\citation{perez2018film}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Summary of Fair Comparison Findings}{13}{subsection.6.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Summary: Gating vs. Alternatives Across All Experiments}}{13}{table.caption.34}\protected@file@percent }
+\newlabel{tab:summary}{{7}{13}{Summary: Gating vs. Alternatives Across All Experiments}{table.caption.34}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Analysis}{13}{section.7}\protected@file@percent }
+\newlabel{sec:analysis}{{7}{13}{Analysis}{section.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Why Gating Provides Stability}{13}{subsection.7.1}\protected@file@percent }
+\citation{parisi2019continual}
+\citation{mccloskey1989catastrophic,french1999catastrophic}
+\citation{shazeer2017outrageously,jacobs1991adaptive}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces When to Use Each Adaptation Strategy}}{14}{table.caption.35}\protected@file@percent }
+\newlabel{tab:when_to_use}{{8}{14}{When to Use Each Adaptation Strategy}{table.caption.35}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}When to Use \textsc  {Astral}{}}{14}{subsection.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Training Performance}{14}{subsection.7.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces \textbf  {Training Performance.} ASTRAL (best config) achieves $\sim $490 return, comparable to SB3 PPO ($\sim $443). The original GRU baseline failed to learn ($\sim $24), indicating the abstraction bank is beneficial for learning.}}{14}{figure.caption.36}\protected@file@percent }
+\newlabel{fig:training}{{6}{14}{\textbf {Training Performance.} ASTRAL (best config) achieves $\sim $490 return, comparable to SB3 PPO ($\sim $443). The original GRU baseline failed to learn ($\sim $24), indicating the abstraction bank is beneficial for learning}{figure.caption.36}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Limitations}{14}{subsection.7.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Discussion}{14}{section.8}\protected@file@percent }
+\newlabel{sec:discussion}{{8}{14}{Discussion}{section.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}The Stability-Performance Tradeoff}{14}{subsection.8.1}\protected@file@percent }
+\citation{locatello2020object}
+\citation{schulman2017proximal}
+\citation{jacobs1991adaptive}
+\citation{sodhani2021multi}
+\citation{srivastava2014dropout}
+\citation{zintgraf2020varibad}
+\citation{brockman2016gym}
+\citation{finn2017maml,rakelly2019efficient}
+\citation{kumar2021rma}
+\citation{tobin2017domain}
+\citation{verma2018programmatically}
+\bibstyle{unsrtnat}
+\bibdata{references}
+\bibcite{padakandla2020survey}{{1}{2020}{{Padakandla}}{{}}}
+\bibcite{xie2020deep}{{2}{2020}{{Xie et~al.}}{{Xie, Harrison, and Finn}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Why Does Slot Collapse Occur?}{15}{subsection.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reward Signal.}{15}{section*.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Optimization Landscape.}{15}{section*.38}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Insufficient Mode Diversity.}{15}{section*.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Implications for Adaptive RL}{15}{subsection.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{15}{section.9}\protected@file@percent }
+\newlabel{sec:conclusion}{{9}{15}{Conclusion}{section.9}{}}
+\@writefile{toc}{\contentsline {paragraph}{Broader Impact.}{15}{section*.40}\protected@file@percent }
+\bibcite{tobin2017domain}{{3}{2017}{{Tobin et~al.}}{{Tobin, Fong, Ray, Schneider, Zaremba, and Abbeel}}}
+\bibcite{kumar2021rma}{{4}{2021}{{Kumar et~al.}}{{Kumar, Fu, Pathak, and Malik}}}
+\bibcite{hallak2015contextual}{{5}{2015}{{Hallak et~al.}}{{Hallak, Di~Castro, and Mannor}}}
+\bibcite{finn2017maml}{{6}{2017}{{Finn et~al.}}{{Finn, Abbeel, and Levine}}}
+\bibcite{nichol2018firstorder}{{7}{2018}{{Nichol et~al.}}{{Nichol, Achiam, and Schulman}}}
+\bibcite{rakelly2019efficient}{{8}{2019}{{Rakelly et~al.}}{{Rakelly, Zhou, Finn, Levine, and Quillen}}}
+\bibcite{lee2020context}{{9}{2020}{{Lee et~al.}}{{Lee, Seo, Lee, Lee, and Shin}}}
+\bibcite{mccloskey1989catastrophic}{{10}{1989}{{McCloskey and Cohen}}{{}}}
+\bibcite{french1999catastrophic}{{11}{1999}{{French}}{{}}}
+\bibcite{kirkpatrick2017overcoming}{{12}{2017}{{Kirkpatrick et~al.}}{{Kirkpatrick, Pascanu, Rabinowitz, Veness, Desjardins, Rusu, Milan, Quan, Ramalho, Grabska-Barwinska, et~al.}}}
+\bibcite{parisi2019continual}{{13}{2019}{{Parisi et~al.}}{{Parisi, Kemker, Part, Kanan, and Wermter}}}
+\bibcite{rolnick2019experience}{{14}{2019}{{Rolnick et~al.}}{{Rolnick, Ahuja, Schwarz, Lillicrap, and Wayne}}}
+\bibcite{choi2000hidden}{{15}{2000}{{Choi et~al.}}{{Choi, Yeung, and Zhang}}}
+\bibcite{da2006dealing}{{16}{2006}{{Da~Silva et~al.}}{{Da~Silva, Basso, Bazzan, and Engel}}}
+\bibcite{zintgraf2020varibad}{{17}{2020}{{Zintgraf et~al.}}{{Zintgraf, Shiarlis, Igl, Schulze, Gal, Hofmann, and Whiteson}}}
+\bibcite{li2006towards}{{18}{2006}{{Li et~al.}}{{Li, Walsh, and Littman}}}
+\bibcite{ferns2004metrics}{{19}{2004}{{Ferns et~al.}}{{Ferns, Panangaden, and Precup}}}
+\bibcite{castro2010using}{{20}{2010}{{Castro and Precup}}{{}}}
+\bibcite{gelada2019deepmdp}{{21}{2019}{{Gelada et~al.}}{{Gelada, Kumar, Buckman, Nachum, and Bellemare}}}
+\bibcite{laskin2020curl}{{22}{2020}{{Laskin et~al.}}{{Laskin, Srinivas, and Abbeel}}}
+\bibcite{locatello2020object}{{23}{2020}{{Locatello et~al.}}{{Locatello, Weissenborn, Unterthiner, Mahendran, Heigold, Uszkoreit, Dosovitskiy, and Kipf}}}
+\bibcite{veerapaneni2020entity}{{24}{2020}{{Veerapaneni et~al.}}{{Veerapaneni, Co-Reyes, Chang, Janner, Finn, Wu, Tenenbaum, and Levine}}}
+\bibcite{zenke2017continual}{{25}{2017}{{Zenke et~al.}}{{Zenke, Poole, and Ganguli}}}
+\bibcite{aljundi2018memory}{{26}{2018}{{Aljundi et~al.}}{{Aljundi, Babiloni, Elhoseiny, Rohrbach, and Tuytelaars}}}
+\bibcite{shin2017continual}{{27}{2017}{{Shin et~al.}}{{Shin, Lee, Kim, and Kim}}}
+\bibcite{rusu2016progressive}{{28}{2016}{{Rusu et~al.}}{{Rusu, Rabinowitz, Desjardins, Soyer, Kirkpatrick, Kavukcuoglu, Pascanu, and Hadsell}}}
+\bibcite{mallya2018packnet}{{29}{2018}{{Mallya and Lazebnik}}{{}}}
+\bibcite{andreas2016neural}{{30}{2016}{{Andreas et~al.}}{{Andreas, Rohrbach, Darrell, and Klein}}}
+\bibcite{wang2021tent}{{31}{2021}{{Wang et~al.}}{{Wang, Shelhamer, Liu, Olshausen, and Darrell}}}
+\bibcite{zhang2022memo}{{32}{2022}{{Zhang et~al.}}{{Zhang, Levine, and Finn}}}
+\bibcite{sun2020test}{{33}{2020}{{Sun et~al.}}{{Sun, Wang, Liu, Miller, Efros, and Hardt}}}
+\bibcite{duan2016rl2}{{34}{2016}{{Duan et~al.}}{{Duan, Schulman, Chen, Bartlett, Sutskever, and Abbeel}}}
+\bibcite{wang2016learning}{{35}{2016}{{Wang et~al.}}{{Wang, Kurth-Nelson, Tirumala, Soyer, Leibo, Munos, Blundell, Kumaran, and Botvinick}}}
+\bibcite{mishra2018simple}{{36}{2018}{{Mishra et~al.}}{{Mishra, Rohaninejad, Chen, and Abbeel}}}
+\bibcite{rothfuss2019promp}{{37}{2019}{{Rothfuss et~al.}}{{Rothfuss, Lee, Clavera, Asfour, and Abbeel}}}
+\bibcite{jacobs1991adaptive}{{38}{1991}{{Jacobs et~al.}}{{Jacobs, Jordan, Nowlan, and Hinton}}}
+\bibcite{shazeer2017outrageously}{{39}{2017}{{Shazeer et~al.}}{{Shazeer, Mirhoseini, Maziarz, Davis, Le, Hinton, and Dean}}}
+\bibcite{ren2021probabilistic}{{40}{2021}{{Ren et~al.}}{{Ren, Li, Ding, and Arumugam}}}
+\bibcite{goyal2019reinforcement}{{41}{2019}{{Goyal et~al.}}{{Goyal, Islam, Strouse, Ahmed, Botvinick, Larochelle, Bengio, and Levine}}}
+\bibcite{bahdanau2015neural}{{42}{2015}{{Bahdanau et~al.}}{{Bahdanau, Cho, and Bengio}}}
+\bibcite{vaswani2017attention}{{43}{2017}{{Vaswani et~al.}}{{Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez, Kaiser, and Polosukhin}}}
+\bibcite{perez2018film}{{44}{2018}{{Perez et~al.}}{{Perez, Strub, De~Vries, Dumoulin, and Courville}}}
+\bibcite{barreto2020fast}{{45}{2020}{{Barreto et~al.}}{{Barreto, Borsa, Hou, Comanici, Aygün, Hamel, Toyama, Mourad, Silver, and Precup}}}
+\bibcite{sodhani2021multi}{{46}{2021}{{Sodhani et~al.}}{{Sodhani, Zhang, and Pineau}}}
+\bibcite{peng2019mcp}{{47}{2019}{{Peng et~al.}}{{Peng, Chang, Zhang, Abbeel, and Levine}}}
+\bibcite{srivastava2014dropout}{{48}{2014}{{Srivastava et~al.}}{{Srivastava, Hinton, Krizhevsky, Sutskever, and Salakhutdinov}}}
+\bibcite{wan2013regularization}{{49}{2013}{{Wan et~al.}}{{Wan, Zeiler, Zhang, Le~Cun, and Fergus}}}
+\bibcite{tompson2015efficient}{{50}{2015}{{Tompson et~al.}}{{Tompson, Goroshin, Jain, LeCun, and Bregler}}}
+\bibcite{zhou2020scheduled}{{51}{2020}{{Zhou et~al.}}{{Zhou, Ge, Xu, Wei, and Zhou}}}
+\bibcite{schulman2017proximal}{{52}{2017}{{Schulman et~al.}}{{Schulman, Wolski, Dhariwal, Radford, and Klimov}}}
+\bibcite{brockman2016gym}{{53}{2016}{{Brockman et~al.}}{{Brockman, Cheung, Pettersson, Schneider, Schulman, Tang, and Zaremba}}}
+\bibcite{stable-baselines3}{{54}{2021}{{Raffin et~al.}}{{Raffin, Hill, Gleave, Kanervisto, Ernestus, and Dormann}}}
+\bibcite{verma2018programmatically}{{55}{2018}{{Verma et~al.}}{{Verma, Murali, Singh, Kohli, and Chaudhuri}}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Additional Experimental Details}{18}{appendix.A}\protected@file@percent }
+\newlabel{sec:appendix}{{A}{18}{Additional Experimental Details}{appendix.A}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}TTA Performance by Model Type}{18}{subsection.A.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces TTA improvement by model configuration. Slot dropout (0.3) is the \textbf  {only} method achieving positive TTA improvement.}}{19}{figure.caption.42}\protected@file@percent }
+\newlabel{fig:tta_models}{{7}{19}{TTA improvement by model configuration. Slot dropout (0.3) is the \textbf {only} method achieving positive TTA improvement}{figure.caption.42}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Causal Intervention Analysis}{19}{subsection.A.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Causal intervention experiments showing effect of clamping (left) and disabling (right) individual slots.}}{19}{figure.caption.43}\protected@file@percent }
+\newlabel{fig:interventions}{{8}{19}{Causal intervention experiments showing effect of clamping (left) and disabling (right) individual slots}{figure.caption.43}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.3}SB3 PPO Fine-Tuning Baseline}{19}{subsection.A.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces SB3 PPO fine-tuning achieves $+77$ average improvement, demonstrating that full adaptation is possible---but causes forgetting on non-adapted modes.}}{20}{figure.caption.44}\protected@file@percent }
+\newlabel{fig:sb3}{{9}{20}{SB3 PPO fine-tuning achieves $+77$ average improvement, demonstrating that full adaptation is possible---but causes forgetting on non-adapted modes}{figure.caption.44}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.4}Computational Resources}{20}{subsection.A.4}\protected@file@percent }
+\gdef \@abspage@last{20}
