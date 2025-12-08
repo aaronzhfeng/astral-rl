@@ -35,7 +35,7 @@
 \title{ASTRAL: Abstraction-Structured Test-time Reinforcement Adaptation Layer for Non-Stationary Environments}
 
 \author{%
-  Aaron Feng\thanks{Equal contribution.} \quad Rita Wu$^*$ \quad Bella Wang$^*$ \quad Sophie Wang$^*$ \\
+  Aaron Feng\thanks{Equal contribution.} \quad Rita Yujia Wu$^*$ \quad Bella Wang$^*$ \quad Sophie Wang$^*$ \\
   UC San Diego \\
   \texttt{\{zhf004, yuw172, yuw170, zhw074\}@ucsd.edu} \\[0.5em]
   \small Code: \url{https://github.com/aaronzhfeng/astral-rl}
@@ -656,6 +656,7 @@ However, we emphasize the limitations of this work (Section~\ref{sec:limitations
 \bibliographystyle{unsrtnat}
 \bibliography{references}
 
+\clearpage
 %==============================================================================
 \appendix
 \section{Additional Experimental Details}
@@ -684,7 +685,7 @@ To understand slot specialization, we performed causal interventions on trained 
 
 Results show that performance is relatively robust to slot manipulation in diverse models, but collapsed models are highly sensitive.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.95\textwidth]{causal_interventions.png}
 \caption{Causal intervention experiments showing effect of clamping (left) and disabling (right) individual slots.}
@@ -695,7 +696,7 @@ Results show that performance is relatively robust to slot manipulation in diver
 
 Figure~\ref{fig:sb3} shows that the SB3 PPO baseline can be successfully fine-tuned, achieving $+77$ average improvement. This demonstrates that adaptation \emph{is} possible with full fine-tuning---but at the cost of forgetting.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.75\textwidth]{sb3_finetuning.png}
 \caption{SB3 PPO fine-tuning achieves $+77$ average improvement, demonstrating that full adaptation is possible---but causes forgetting on non-adapted modes.}
