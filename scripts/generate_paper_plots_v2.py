@@ -564,8 +564,8 @@ def plot_6_tta_by_model():
                f'{val:+.1f}', ha='left' if w > 0 else 'right', va='center',
                fontsize=10, fontweight='bold')
     
-    # Highlight
-    ax.annotate('Only positive\nTTA result!', xy=(11.4, 7.5), xytext=(30, 7.3),
+    # Highlight - slot_dropout_0.3 is at y=0 (first row)
+    ax.annotate('Only positive\nTTA result!', xy=(11.4, 0), xytext=(30, 1.5),
                arrowprops=dict(arrowstyle='->', color=COLORS['positive'], lw=2),
                fontsize=11, color=COLORS['positive'], fontweight='bold')
     

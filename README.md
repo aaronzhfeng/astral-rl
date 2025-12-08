@@ -1,17 +1,35 @@
-# ASTRAL: Abstraction-Slot Test-time Reweighting for Adaptation in Latent RL
+# ASTRAL: Abstraction-Structured Test-time Reinforcement Adaptation Layer
 
-A small-scale proof-of-concept for **structured abstractions in in-context RL**.
+[![Paper](https://img.shields.io/badge/Paper-PDF-red)](report/version_2/astral_paper.pdf)
+[![Python 3.8+](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-ASTRAL tests whether discrete, learnable "abstraction slots" can provide interpretable, mode-specific adaptation in non-stationary environments, with efficient test-time adaptation by updating only the gating network.
+A **proof-of-concept** for structured abstractions in in-context RL, demonstrating stable test-time adaptation through gating-only updates.
+
+**Authors:** Aaron Feng, Rita Yujia Wu, Bella Wang, Sophie Wang (UC San Diego)
 
 ---
 
-## 🎯 Research Question
+## 🎯 Key Finding
 
-> Can we add structured abstractions to in-context RL that are:
-> 1. **Interpretable** — different modes activate different abstraction slots
-> 2. **Efficient** — test-time adaptation requires updating only the gating network
-> 3. **Causal** — clamping/disabling slots produces predictable behavioral changes
+> **Gating-only adaptation provides 10× less catastrophic forgetting than full fine-tuning**, at the cost of lower peak improvement. ASTRAL is suited for **risk-averse** deployment where stability matters more than maximum single-mode performance.
+
+| Method | TTA Improvement | Forgetting | Variance |
+|--------|----------------|------------|----------|
+| Gating (ASTRAL) | +11 | -25.8 | Low |
+| Full Fine-tune | +77 | -250.1 | High |
+
+---
+
+## 📊 Results Summary
+
+Through **38 experiments** across 33+ model configurations:
+
+- ✅ **Slot collapse** occurs in 73% of configurations → **Slot dropout (p=0.3)** mitigates it
+- ✅ **10× less forgetting** with gating-only TTA vs full fine-tuning
+- ✅ **Consistent performance** across all episode budgets (1-50)
+- ⚠️ **Interpretability limited** — no clean mode→slot correspondence emerges
+- ⚠️ **Toy environment** — CartPole is simple; scaling to complex envs needed
 
 ---
 
@@ -66,92 +84,86 @@ Input: (s_t, a_{t-1}, r_{t-1})
      └─────────────┘         └─────────────┘
 ```
 
-**Key Design Decisions:**
-- **FiLM modulation** ensures the policy depends on abstractions (no bypass)
-- **Soft attention** over K slots allows gradient-based learning
-- **Test-time adaptation** updates only the gating network (4K parameters)
+**Key Design:**
+- **FiLM modulation** ensures policy depends on abstractions (no bypass)
+- **Test-time adaptation** updates only gating network (~4.3k params, 8% of model)
 
 ---
 
 ## 📁 Project Structure
 
 ```
-test_time_RL/
-├── README.md                    # This file
-├── astral_implementation_plan.md # Detailed implementation guide
-├── astral_proposal.md           # Research proposal
+astral-rl/
+├── README.md
+├── requirements.txt
 │
 ├── src/
 │   ├── envs/
-│   │   └── nonstationary_cartpole.py  # 3-mode CartPole environment
-│   │
+│   │   └── nonstationary_cartpole.py  # 3-mode CartPole
 │   ├── models/
-│   │   ├── abstraction_bank.py   # K learnable slots + gating
-│   │   ├── film.py               # Feature-wise Linear Modulation
-│   │   └── astral_agent.py       # Full agent + baseline
-│   │
-│   ├── losses.py                 # Regularization losses
-│   ├── train.py                  # PPO training loop
-│   ├── test_time_adapt.py        # TTA experiments
-│   └── interventions.py          # Causal intervention experiments
+│   │   ├── abstraction_bank.py        # K learnable slots + gating
+│   │   ├── film.py                    # Feature-wise Linear Modulation
+│   │   └── astral_agent.py            # Full agent + baseline
+│   ├── losses.py                      # Regularization losses
+│   ├── train.py                       # PPO training loop
+│   ├── test_time_adapt.py             # TTA experiments
+│   └── interventions.py               # Causal interventions
 │
-├── cleanrl/                      # CleanRL reference (cloned)
-│   └── venv/                     # Python virtual environment
+├── scripts/
+│   ├── generate_paper_plots_v2.py     # Figure generation
+│   ├── run_fair_comparison.py         # Fair comparison experiments
+│   └── ...
 │
 ├── results/
-│   ├── runs/                     # Training runs + checkpoints
-│   ├── tta/                      # TTA experiment results
-│   └── interventions/            # Intervention experiment results
+│   ├── runs/                          # Training checkpoints
+│   ├── analysis/                      # Experiment documentation
+│   ├── fair_comparison/               # Experiments A-D results
+│   └── tta_final_validation/          # TTA results
 │
-└── configs/                      # (Optional) Config files
+├── report/
+│   └── version_2/
+│       ├── astral_paper.pdf           # Full paper (20 pages)
+│       └── astral_paper.tex
+│
+└── docs/
+    ├── 00_experiment_checklist.md     # Experiment status tracker
+    ├── 01_astral_proposal.md          # Original proposal
+    └── ...
 ```
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Setup
+### Setup
 
 ```bash
-# Clone and enter directory
-cd test_time_RL
-
-# Activate virtual environment
-source cleanrl/venv/bin/activate
-
-# Verify installation
-python -c "import torch; import gymnasium; print('Ready!')"
+git clone https://github.com/aaronzhfeng/astral-rl.git
+cd astral-rl
+pip install -r requirements.txt
 ```
 
-### 2. Train ASTRAL
+### Train ASTRAL (Best Config)
 
 ```bash
-# Train ASTRAL agent (500k timesteps, ~10 min on CPU)
-python src/train.py --total_timesteps 500000
-
-# Train baseline (GRU-only, for comparison)
-python src/train.py --use_abstractions False --exp_name baseline
+python src/train.py \
+    --use_gumbel True \
+    --temp_anneal True \
+    --lambda_contrast 0.1 \
+    --lambda_lb 0.05 \
+    --slot_dropout 0.3 \
+    --exp_name best_config
 ```
 
-### 3. Test-Time Adaptation
+### Test-Time Adaptation
 
 ```bash
-# Run TTA experiment on all modes
 python src/test_time_adapt.py \
-    --checkpoint results/runs/<run_name>/final_model.pt \
-    --num_adapt_episodes 30
+    --checkpoint results/runs/best_config/final_model.pt \
+    --num_adapt_episodes 20
 ```
 
-### 4. Causal Interventions
-
-```bash
-# Run clamping/disabling experiments
-python src/interventions.py \
-    --checkpoint results/runs/<run_name>/final_model.pt \
-    --num_episodes 20
-```
-
-### 5. View Logs
+### View Training Logs
 
 ```bash
 tensorboard --logdir results/runs
@@ -161,118 +173,41 @@ tensorboard --logdir results/runs
 
 ## 🧪 Environment: NonStationaryCartPole
 
-A CartPole variant with 3 hidden "modes" that change physical dynamics:
-
 | Mode | Gravity | Pole Length | Difficulty |
 |:-----|:--------|:------------|:-----------|
 | 0 | 9.8 | 0.5 | Default |
-| 1 | 7.5 | 0.7 | Easy (slower, longer) |
-| 2 | 12.0 | 0.4 | Hard (faster, shorter) |
+| 1 | 7.5 | 0.7 | Easy |
+| 2 | 12.0 | 0.4 | Hard |
 
-The agent does **not** observe the mode — it must infer it from dynamics.
-
----
-
-## 📊 Key Results
-
-### Training
-- Both ASTRAL and baseline learn CartPole (~100-150 return)
-- Mode 1 (easy) performs best, Mode 2 (hard) worst
-
-### Test-Time Adaptation
-- TTA improves Mode 0 by **+10.4%** with only 20 episodes
-- Updates only **4,355 parameters** (8.5% of model)
-
-### Slot Collapse (Known Issue)
-All modes collapse to using **Slot 1** (~99.99%). This limits interpretability.
-
-**Causal Evidence:**
-- Clamping to Slot 1: Best performance
-- Clamping to Slot 0/2: Severe drop (-75 to -115 points)
-- Disabling Slot 1: Catastrophic failure
-
-See `docs/interpretability_improvements.md` for solutions.
+Agent does **not** observe the mode — must infer from dynamics.
 
 ---
 
-## 🔧 Configuration
+## ⚠️ Known Limitations
 
-Key hyperparameters in `src/train.py`:
+This is a **proof-of-concept** with significant limitations:
 
-| Parameter | Default | Description |
-|:----------|:--------|:------------|
-| `d_model` | 64 | Hidden dimension |
-| `num_abstractions` | 3 | Number of slots (K) |
-| `tau` | 1.0 | Softmax temperature |
-| `learning_rate` | 3e-4 | PPO learning rate |
-| `lambda_w_ent` | 0.001 | Weight entropy regularization |
-| `lambda_lb` | 0.001 | Load balancing regularization |
-| `lambda_orth` | 0.0001 | Orthogonality regularization |
+1. **Toy environment** — CartPole is trivial; solved in the 1980s
+2. **Slot collapse** — 73% of configs collapse to single slot
+3. **No interpretability** — slots don't map to semantic modes
+4. **Modest TTA** — +11 improvement vs +77 for full fine-tuning
+5. **No meta-RL comparison** — didn't compare to MAML, PEARL, etc.
 
-### Interpretability Improvements (Optional)
-
-All improvements are modular and disabled by default:
-
-| Flag | Description |
-|:-----|:------------|
-| `--use_gumbel True` | Gumbel-Softmax for slot exploration |
-| `--hard_routing True` | Discrete one-hot slot selection |
-| `--orthogonal_init True` | Initialize slots orthogonally |
-| `--temp_anneal True` | Anneal temperature from high to low |
-| `--tau_start 5.0` | Starting temperature (if annealing) |
-| `--tau_end 0.5` | Ending temperature (if annealing) |
-| `--lambda_contrast 0.01` | Contrastive loss (mode→slot) |
-| `--slot_prediction True` | Auxiliary slot prediction task |
+See paper Section 7.3 for full discussion.
 
 ---
 
-## 📈 Experiments
+## 🔮 Future Work: TAG-AMAGO
 
-### 1. Baseline Comparison
-```bash
-# Train both
-python src/train.py --use_abstractions True --exp_name astral
-python src/train.py --use_abstractions False --exp_name baseline
+ASTRAL validates core ideas on a toy testbed. The next step is **TAG-AMAGO**:
 
-# Compare in tensorboard
-tensorboard --logdir results/runs
-```
+1. **Transformer backbone** — Replace GRU with AMAGO-style transformer
+2. **Challenging benchmarks** — MuJoCo, Meta-World ML10/ML45
+3. **More slots** — K=8-16 instead of K=3
+4. **Rigorous interpretability** — Cross-task transfer, causal ablations
+5. **Meta-RL comparison** — MAML, PEARL, VariBAD, Algorithm Distillation
 
-### 2. Regularization Ablation
-```bash
-# Stronger regularization
-python src/train.py --lambda_w_ent 0.01 --lambda_lb 0.01 --lambda_orth 0.001
-
-# No regularization
-python src/train.py --lambda_w_ent 0 --lambda_lb 0 --lambda_orth 0
-```
-
-### 3. Temperature Sweep
-```bash
-# Cold (peaked weights)
-python src/train.py --tau 0.1
-
-# Hot (uniform weights)
-python src/train.py --tau 10.0
-```
-
-### 4. Interpretability Improvements
-```bash
-# All improvements (recommended for addressing slot collapse)
-python src/train.py \
-    --use_gumbel True \
-    --hard_routing True \
-    --orthogonal_init True \
-    --temp_anneal True \
-    --lambda_contrast 0.01 \
-    --slot_prediction True
-
-# Just temperature annealing
-python src/train.py --temp_anneal True --tau_start 5.0 --tau_end 0.5
-
-# Contrastive loss only
-python src/train.py --lambda_contrast 0.05
-```
+See paper Section 8.4 and `docs/` for detailed roadmap.
 
 ---
 
@@ -280,45 +215,33 @@ python src/train.py --lambda_contrast 0.05
 
 | Document | Description |
 |:---------|:------------|
-| `CONTEXT.md` | **Quick onboarding for new environments** |
-| `docs/baseline_vs_astral.md` | Train vs Test-time differences |
-| `docs/abstraction_bank_vs_moe.md` | Comparison with Mixture of Experts |
-| `docs/experiment_guide.md` | Complete commands for all experiments |
-| `docs/interpretability_improvements.md` | Solutions for slot collapse |
-
----
-
-## 🔬 Future Work
-
-1. **Fix Slot Collapse** — See `docs/interpretability_improvements.md`
-2. **Scale to TAG-AMAGO** — Transformer backbone, MuJoCo/Meta-World
-3. **Mode-Conditioned Auxiliary Loss** — Encourage mode→slot correspondence
-4. **Continual Learning** — Test on sequentially changing modes
+| [Paper (PDF)](report/version_2/astral_paper.pdf) | Full 20-page paper |
+| [docs/00_experiment_checklist.md](docs/00_experiment_checklist.md) | Experiment status |
+| [results/analysis/](results/analysis/) | Detailed experiment logs |
 
 ---
 
 ## 📚 References
 
-- **FiLM**: Perez et al., "FiLM: Visual Reasoning with a General Conditioning Layer"
-- **AMAGO**: Grigsby et al., "AMAGO: Scalable In-Context Reinforcement Learning"
-- **CleanRL**: Huang et al., "CleanRL: High-quality Single-file Implementations of Deep RL Algorithms"
+Key papers that influenced this work:
 
----
+| Paper | Relevance |
+|:------|:----------|
+| [AMAGO](https://arxiv.org/abs/2310.09971) (Grigsby et al., 2024) | State-of-the-art in-context RL; TAG-AMAGO builds on this |
+| [FiLM](https://arxiv.org/abs/1709.07871) (Perez et al., 2018) | Feature-wise modulation mechanism we use |
+| [MoASE](https://arxiv.org/abs/2405.16486) (Zhang et al., 2024) | MoE for continual test-time adaptation (vision) |
+| [Slot Attention](https://arxiv.org/abs/2006.15055) (Locatello et al., 2020) | Object-centric slots; inspired our abstraction bank |
+| [EWC](https://arxiv.org/abs/1612.00796) (Kirkpatrick et al., 2017) | Catastrophic forgetting prevention |
+| [MAML](https://arxiv.org/abs/1703.03400) (Finn et al., 2017) | Meta-learning for fast adaptation |
+| [PEARL](https://arxiv.org/abs/1903.08254) (Rakelly et al., 2019) | Probabilistic context for meta-RL |
+| [VariBAD](https://arxiv.org/abs/1910.08348) (Zintgraf et al., 2020) | Bayes-adaptive deep RL |
+| [PPO](https://arxiv.org/abs/1707.06347) (Schulman et al., 2017) | RL algorithm we use |
+| [Stable-Baselines3](https://jmlr.org/papers/v22/20-1364.html) (Raffin et al., 2021) | Baseline implementation |
 
-## 📝 Citation
-
-```bibtex
-@misc{astral2024,
-  title={ASTRAL: Abstraction-Slot Test-time Reweighting for Adaptation in Latent RL},
-  author={...},
-  year={2024},
-  note={Proof-of-concept implementation}
-}
-```
+See paper for full bibliography (54 references).
 
 ---
 
 ## 📄 License
 
 MIT License
-
