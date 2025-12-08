@@ -35,9 +35,10 @@
 \title{ASTRAL: Abstraction-Structured Test-time Reinforcement Adaptation Layer for Non-Stationary Environments}
 
 \author{%
-  Anonymous Author(s) \\
-  Institution \\
-  \texttt{anonymous@institution.edu}
+  Aaron Feng\thanks{Equal contribution.} \quad Rita Wu$^*$ \quad Bella Wang$^*$ \quad Sophie Wang$^*$ \\
+  UC San Diego \\
+  \texttt{\{zhf004, yuw172, yuw170, zhw074\}@ucsd.edu} \\[0.5em]
+  \small Code: \url{https://github.com/aaronzhfeng/astral-rl}
 }
 
 \begin{document}
@@ -125,6 +126,8 @@ Gradient-based meta-RL methods include MAML-RL \citep{finn2017maml}, ProMP \cite
 \subsection{Mixture of Experts and Gating Mechanisms}
 
 Mixture of Experts (MoE) \citep{jacobs1991adaptive} routes inputs to specialized sub-networks through a gating function. The Sparsely-Gated MoE \citep{shazeer2017outrageously} scaled this to billions of parameters using top-k routing. Recent work has applied MoE to RL: \citet{ren2021probabilistic} use probabilistic mixture policies, and \citet{goyal2019reinforcement} combine MoE with option frameworks.
+
+Most relevant to our work, MoASE \citep{zhang2024moase} applies MoE for \emph{continual test-time adaptation} in computer vision. MoASE decomposes neural activations into high/low activation components and uses domain-aware gating to combine experts, addressing catastrophic forgetting during adaptation. Our approach shares the high-level motivation---using gating mechanisms for forgetting-resistant adaptation---but differs in key ways: (1) \method{} operates in \emph{reinforcement learning} rather than supervised vision; (2) we use a bank of \emph{abstraction vectors} combined through soft attention, rather than routing to separate expert networks; (3) our FiLM modulation provides a single shared policy modulated by abstractions, rather than combining expert outputs.
 
 Our abstraction bank differs from traditional MoE in several ways: (1) we use soft attention over \emph{abstraction vectors} rather than routing to separate networks; (2) we modulate a shared policy through FiLM rather than combining expert outputs; (3) crucially, we adapt only the gating network at test time while keeping abstractions frozen.
 
@@ -542,26 +545,6 @@ The frozen policy acts as an ``anchor'' that cannot be corrupted during adaptati
 
 Formally, let $\pi_\theta(a|s) = f(\bh'_t)$ where $\bh'_t = \gamma(\bz_t) \odot \bh_t + \beta(\bz_t)$ \citep{perez2018film} and $\bz_t = \sum_k w_k \mathbf{a}_k$. During gating-only adaptation, only $\{w_k\}$ changes while $\{\mathbf{a}_k\}$, $f$, $\gamma$, $\beta$ remain fixed. The policy is constrained to the convex hull of behaviors encoded by the fixed slot vectors, providing a geometric interpretation of the stability guarantee.
 
-\subsection{When to Use \method{}}
-
-\begin{table}[h]
-\centering
-\caption{When to Use Each Adaptation Strategy}
-\label{tab:when_to_use}
-\begin{tabular}{@{}lll@{}}
-\toprule
-\textbf{Scenario} & \textbf{Best Method} & \textbf{Reason} \\
-\midrule
-Multi-mode deployment & Gating & Prevents forgetting other modes \\
-Unknown adaptation budget & Gating & Consistent across all budgets \\
-Risk-averse setting & Gating & No catastrophic failures observed \\
-\midrule
-Single-mode optimization & Full Fine-Tune & Maximum improvement possible \\
-Exactly 5 episodes available & Policy Head & Peak performance at this budget \\
-\bottomrule
-\end{tabular}
-\end{table}
-
 \subsection{Training Performance}
 
 Figure~\ref{fig:training} shows that \method{} successfully learns the task, achieving comparable performance to the well-tuned SB3 PPO baseline.
@@ -574,13 +557,23 @@ Figure~\ref{fig:training} shows that \method{} successfully learns the task, ach
 \end{figure}
 
 \subsection{Limitations}
+\label{sec:limitations}
 
-\begin{enumerate}
-    \item \textbf{Lower peak improvement}: Full fine-tuning can achieve $+77$ improvement (SB3 baseline) vs gating's $+11$.
-    \item \textbf{Requires slot dropout}: Without it, slot collapse prevents meaningful TTA.
-    \item \textbf{Single environment}: Results demonstrated on CartPole; generalization to complex environments requires further study.
-    \item \textbf{No mode-slot correspondence}: Slots do not cleanly map to environment modes, limiting interpretability.
-\end{enumerate}
+We present an honest assessment of \method{}'s limitations, which we believe is essential for understanding the scope of our contributions and guiding future work.
+
+\paragraph{Toy Environment.} CartPole \citep{barto1983neuronlike} is a canonical but fundamentally simple benchmark: 4-dimensional continuous state, 2 discrete actions, and dense reward (+1 per timestep). The environment was solved by simple methods in the 1980s \citep{barto1983neuronlike} and does not require sophisticated abstractions. Our ``non-stationarity'' consists of only \textbf{three fixed physics modes} sampled at episode boundaries---far simpler than real-world non-stationarity involving continuous parameter drift, novel mode emergence, or compositional changes. A well-tuned linear controller could likely solve all three modes without any abstraction mechanism.
+
+\paragraph{Primitive Architecture.} Our GRU backbone (single layer, $d=64$) is substantially simpler than modern in-context RL architectures. AMAGO \citep{grigsby2024amago} uses 4--6 layer transformers with $d=256$--$512$; Algorithm Distillation \citep{laskin2022context} uses similar scales. With only \textbf{$\sim$51k total parameters}, \method{} may simply lack the capacity where abstractions become necessary. The benefit we observe may not transfer to larger models that can implicitly represent multiple strategies without explicit slots.
+
+\paragraph{Slot Collapse is the Norm, Not the Exception.} Despite extensive regularization experiments, \textbf{73\% of our configurations exhibit slot collapse}. Slot dropout ($p=0.3$) mitigates but does not eliminate the problem. More critically, even in non-collapsed models, \textbf{we observe no clean mode$\to$slot correspondence}---the interpretability promise of discrete abstractions remains largely unfulfilled. The abstractions do not correspond to semantically meaningful strategies that humans can inspect and understand.
+
+\paragraph{Modest TTA Improvement.} Our best TTA improvement is $+11$ reward, compared to $+77$ for full fine-tuning. While we frame gating as ``stable,'' this stability may simply reflect \textbf{limited adaptation capacity}---the gating network has only $\sim$4.3k parameters and can only reweight fixed abstractions. It remains unclear whether this is a feature (stability) or a bug (insufficient expressiveness).
+
+\paragraph{Incomplete Baselines.} Our custom GRU baseline was discovered to be broken late in experimentation (policy entropy stuck at maximum, indicating random behavior). The SB3 PPO comparison \citep{stable-baselines3} uses a different architecture (MLP vs. GRU), making direct comparison imperfect. Critically, \textbf{we do not compare to established meta-RL methods} (MAML \citep{finn2017maml}, PEARL \citep{rakelly2019efficient}, VariBAD \citep{zintgraf2020varibad}) or recent TTA methods from vision (Tent \citep{wang2021tent}, MEMO \citep{zhang2022memo}).
+
+\paragraph{No Held-Out Evaluation.} All three test modes were seen during training. We do not evaluate on truly novel modes (e.g., gravity=15, length=0.3) or compositional combinations unseen during training. This limits claims about generalization and adaptation to genuinely new situations.
+
+\paragraph{Evaluation Protocol Limitations.} Our TTA protocol (20 adaptation episodes, evaluate on same mode) does not test the most challenging scenarios: rapid mode switches within episodes, gradual drift, or adaptation under partial observability of mode changes. These scenarios are critical for real-world deployment \citep{padakandla2020survey}.
 
 %==============================================================================
 \section{Discussion}
@@ -617,6 +610,28 @@ The slot collapse problem reveals that:
 
 This suggests that purely self-supervised approaches to learning modular abstractions in RL may be insufficient. Future work may require explicit mode supervision, curriculum learning, or architectural constraints that enforce specialization.
 
+\subsection{Future Work: Toward TAG-AMAGO}
+\label{sec:future}
+
+\method{} serves as a proof-of-concept for abstraction-gated adaptation. We outline a roadmap toward a full-scale system we term \textbf{TAG-AMAGO} (Test-time Abstraction-Gated AMAGO), which addresses the limitations identified in Section~\ref{sec:limitations}.
+
+\paragraph{Stage 1: Addressing Slot Collapse.} The fundamental challenge is encouraging slot specialization without explicit supervision. We propose three approaches: (1) \emph{Curriculum learning}---pre-train on single modes sequentially before mixing, allowing slots to ``claim'' specific modes early; (2) \emph{Two-phase training}---Phase 1 freezes gating and learns diverse abstractions via auxiliary losses, Phase 2 freezes abstractions and learns to use them; (3) \emph{Mode-conditioned supervision}---provide mode labels during training as an auxiliary classification target, encouraging mode$\to$slot correspondence.
+
+\paragraph{Stage 2: Scaling Architecture.} Replace the GRU backbone with an AMAGO-style transformer \citep{grigsby2024amago}: 4--6 attention layers, $d_{\text{model}}=256$--$512$, context windows of 50--100 steps. Increase abstraction bank to $K=8$--$16$ slots. This scale is necessary to evaluate whether abstractions provide benefits beyond what large implicit representations already capture. The transformer's attention patterns may also provide additional interpretability signals.
+
+\paragraph{Stage 3: Challenging Benchmarks.} Move beyond CartPole to continuous control benchmarks that genuinely require adaptation:
+\begin{itemize}
+    \item \textbf{MuJoCo} \citep{todorov2012mujoco}: HalfCheetah-Vel (varying target velocities), Ant-Dir (varying movement directions), Walker-Rand-Params (randomized dynamics).
+    \item \textbf{Meta-World} \citep{yu2020meta}: ML10/ML45 multi-task manipulation with distinct task semantics where slot specialization may emerge naturally.
+    \item \textbf{Non-stationary protocols}: Sudden mode switches mid-episode, gradual parameter drift, and held-out mode combinations for true generalization testing.
+\end{itemize}
+
+\paragraph{Stage 4: Rigorous Interpretability.} Develop a comprehensive intervention suite: (1) \emph{Cross-task transfer}---test whether slots learned for one task (e.g., ``high friction locomotion'') transfer to semantically related tasks; (2) \emph{Behavioral clustering}---analyze whether slot activations cluster by task identity, environment parameters, or episode phase (exploration vs. exploitation); (3) \emph{Causal ablations}---systematic clamp/disable experiments across all task-slot pairs to quantify each slot's causal contribution.
+
+\paragraph{Stage 5: Meta-RL Integration.} Compare TAG-AMAGO against established meta-RL methods on standard benchmarks: MAML \citep{finn2017maml} and PEARL \citep{rakelly2019efficient} for few-shot adaptation, VariBAD \citep{zintgraf2020varibad} for Bayes-adaptive policies, and Algorithm Distillation \citep{laskin2022context} for in-context learning. The key question is whether explicit abstractions provide benefits that implicit transformer representations do not.
+
+\paragraph{Expected Contributions.} If successful, TAG-AMAGO would demonstrate that: (1) discrete abstraction banks can scale to complex continuous control; (2) gating-only TTA provides practical benefits over full fine-tuning in realistic non-stationary scenarios; (3) learned abstractions correspond to interpretable behavioral modes that enable human understanding and intervention. Negative results would also be valuable, indicating fundamental limits of explicit abstraction approaches compared to end-to-end learned representations \citep{bengio2013representation}.
+
 %==============================================================================
 \section{Conclusion}
 \label{sec:conclusion}
@@ -625,15 +640,17 @@ This suggests that purely self-supervised approaches to learning modular abstrac
 We introduced \method{}, an architecture for stable test-time adaptation in non-stationary reinforcement learning. Through extensive experimentation (33+ models, 4 fair comparison experiments), we demonstrated that:
 
 \begin{itemize}
-    \item \textbf{Slot collapse} is the primary failure mode of abstraction banks, but \textbf{slot dropout} ($p=0.3$) effectively mitigates it.
+    \item \textbf{Slot collapse} is the primary failure mode of abstraction banks, but \textbf{slot dropout} ($p=0.3$) partially mitigates it.
     \item Gating-only adaptation provides \textbf{10$\times$ less catastrophic forgetting} compared to full fine-tuning ($-25.8$ vs $-250.1$).
     \item Gating maintains \textbf{consistent, low-variance performance} across all episode budgets (1-50), while alternatives show high variance with frequent catastrophic failures.
-    \item \textbf{Stability and maximum improvement are in tension}: full fine-tuning achieves higher peaks but with unacceptable forgetting risk.
+    \item \textbf{Stability and maximum improvement are in tension}: full fine-tuning achieves higher peaks ($+77$) but with unacceptable forgetting risk.
 \end{itemize}
 
-We recommend \method{} for \emph{risk-averse} deployments where maintaining competence across all environment modes is more critical than maximizing single-mode performance. Future work should explore functional diversity mechanisms beyond slot dropout \citep{srivastava2014dropout}, explicit mode-conditioned training \citep{zintgraf2020varibad}, extension to more complex environments \citep{brockman2016gym}, and integration with meta-learning approaches \citep{finn2017maml, rakelly2019efficient} that could provide complementary benefits.
+However, we emphasize the limitations of this work (Section~\ref{sec:limitations}): CartPole is a toy environment, slot collapse remains prevalent (73\% of configurations), and the interpretability promise of discrete abstractions is largely unfulfilled. The modest TTA improvement ($+11$) may reflect limited adaptation capacity rather than principled stability.
 
-\paragraph{Broader Impact.} Safe adaptation without forgetting is critical for real-world RL deployment \citep{kumar2021rma}. \method{} provides a step toward agents that can adapt to changing conditions without catastrophic failures, important for robotics \citep{tobin2017domain}, autonomous vehicles, and other safety-critical applications where stability is paramount \citep{verma2018programmatically}.
+\method{} is best understood as a \textbf{proof-of-concept} validating the core architectural ideas---abstraction banks, FiLM modulation, gating-only adaptation---on a tractable testbed. The true test of these ideas requires scaling to transformer backbones and challenging continuous control benchmarks (Section~\ref{sec:future}). We hope this work provides a foundation for future research on interpretable, stable adaptation in reinforcement learning.
+
+\paragraph{Broader Impact.} Safe adaptation without forgetting is critical for real-world RL deployment \citep{kumar2021rma}. While \method{} is far from deployment-ready, it explores architectural principles that could eventually contribute to safer adaptive agents in robotics \citep{tobin2017domain} and other safety-critical applications \citep{verma2018programmatically}.
 
 %==============================================================================
 \bibliographystyle{unsrtnat}
